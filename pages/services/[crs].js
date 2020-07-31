@@ -13,10 +13,7 @@ function TimeToNow(props) {
   const date = useMemo(() => parseISO(props.dateString), [props.dateString]);
 
   const format = useCallback(() => {
-    return formatDistanceToNow(date, {
-      addSuffix: true,
-      includeSeconds: true,
-    });
+    return formatDistanceToNow(date, { addSuffix: true });
   }, [date]);
 
   const [formatted, setFormatted] = useState(format);
@@ -51,7 +48,8 @@ export default function Service() {
     async (key) => {
       const res = await fetch(key);
       return await res.json();
-    }
+    },
+    { refreshInterval: 15000 }
   );
 
   if (!data && !error) {
