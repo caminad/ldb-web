@@ -22,16 +22,16 @@ export interface Service {
 }
 
 function useLiveServices(
-  crs: string
-): (StationLinkProps & ServicesProps) | undefined {
+  initialServices: StationLinkProps & ServicesProps
+): StationLinkProps & ServicesProps {
   const { data } = useSWR<StationLinkProps & ServicesProps>(
-    `/api/services/${crs}?numRows=50`,
+    `/api/services/${initialServices.crs}?numRows=50`,
     {
       refreshInterval: 15000,
     }
   );
 
-  return data;
+  return data ?? initialServices;
 }
 
 function TimeToNow(props: { dateString: string }): JSX.Element {
@@ -118,14 +118,10 @@ function ensureArray<T>(value: T[] | T | undefined): T[] {
   }
 }
 
-export default function Services(props: {
-  via: StationLinkProps;
-}): JSX.Element {
-  const services = useLiveServices(props.via.crs);
-
-  if (!services) {
-    return <></>;
-  }
+export default function Services(
+  props: StationLinkProps & ServicesProps
+): JSX.Element {
+  const services = useLiveServices(props);
 
   return (
     <>
