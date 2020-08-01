@@ -5,6 +5,7 @@ import stations from 'data/station_codes.json';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import DefaultErrorPage from 'next/error';
 import Head from 'next/head';
+import Link from 'next/link';
 
 const liveDepartureBoardClient = new LiveDepartureBoardClient({
   accessToken: process.env.LDB_TOKEN,
@@ -47,9 +48,16 @@ export default function StationPage(
       </Head>
 
       <main className="p-4 m-auto container">
-        <h1 className="text-4xl font-bold mb-4">
-          Services via {props.services.locationName}
-        </h1>
+        <div className="flex justify-between items-baseline mb-4">
+          <h1 className="text-4xl font-bold">
+            Services via {props.services.locationName}
+          </h1>
+          <Link href="/">
+            <a className="px-4 text-4xl opacity-50" title="Home">
+              ×
+            </a>
+          </Link>
+        </div>
         <ErrorBoundary>
           <Services {...props.services} />
         </ErrorBoundary>

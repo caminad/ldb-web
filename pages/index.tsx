@@ -10,7 +10,7 @@ export default function HomePage() {
       </Head>
 
       <main className="p-4 m-auto container">
-        <h1 className="text-4xl text-center">
+        <h1 className="text-4xl font-bold text-center">
           Unofficial National Rail Live Departure Boards
         </h1>
 
