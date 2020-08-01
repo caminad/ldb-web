@@ -1,49 +1,60 @@
+import stations from 'data/station_codes.json';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import useSWR from 'swr';
-import StationLink, {StationLinkProps} from 'components/station-link'
+import { ChangeEventHandler, useMemo, useState } from 'react';
 
-function useStationSearch(search: string): StationLinkProps[] {
-  const { data } = useSWR(() => {
-    if (!search) throw new Error();
-    return `/api/stations/${encodeURIComponent(search)}`;
+const collator = new Intl.Collator('en', {
+  usage: 'search',
+  sensitivity: 'base',
+});
+
+function findStation(search: string) {
+  return stations.find((item) => {
+    return collator.compare(item.locationName, search) === 0;
   });
-  return data ?? [];
 }
 
-export default function StationSearch() {
+export default function StationSearch(): JSX.Element {
   const router = useRouter();
   const [search, setSearch] = useState('');
-  const stations = useStationSearch(search);
+
+  const station = useMemo(() => {
+    return findStation(search);
+  }, [search]);
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setSearch(event.currentTarget.value);
+  };
 
   return (
     <form
-      className="text-center"
-      method="GET"
-      onSubmit={(ev) => {
-        ev.preventDefault();
-        const station = stations[0];
+      className="my-32 flex justify-center"
+      onSubmit={(event) => {
+        event.preventDefault();
         if (station) {
           router.push('/stations/[crs]', `/stations/${station.crs}`);
         }
       }}
     >
-      <label className="text-xl">
-        Show services via{' '}
-        <input
-          className="mx-4 px-4 py-2 border rounded shadow focus:border-blue-700"
-          type="search"
-          value={search}
-          onChange={(ev) => setSearch(ev.currentTarget.value)}
-        />
-        <ul>
-          {stations.map((item) => (
-            <li className="my-2" key={item.crs}>
-              <StationLink {...item}/>
-            </li>
-          ))}
-        </ul>
-      </label>
+      <input
+        className="max-w-full min-w-0 appearance-none px-6 py-3 rounded-lg rounded-r-none border-2 border-r-0 text-xl shadow-inner focus:outline-none focus:border-blue-600"
+        type="search"
+        name="station"
+        list="stations"
+        placeholder="Station Name"
+        value={search}
+        onChange={handleChange}
+      />
+      <datalist id="stations">
+        {stations.map((station) => (
+          <option key={station.crs}>{station.locationName}</option>
+        ))}
+      </datalist>
+      <button
+        className="appearance-none px-6 py-3 rounded-lg rounded-l-none border-2 border-blue-600 bg-blue-600 text-xl text-white hover:shadow-lg"
+        type="submit"
+      >
+        Show<span className="hidden sm:inline"> Services</span>
+      </button>
     </form>
   );
 }

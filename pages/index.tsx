@@ -1,6 +1,6 @@
-import Head from 'next/head';
-import StationSearch from 'components/station-search';
 import ErrorBoundary from 'components/error-boundary';
+import StationSearch from 'components/station-search';
+import Head from 'next/head';
 
 export default function HomePage() {
   return (
