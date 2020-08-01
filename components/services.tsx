@@ -19,6 +19,9 @@ export interface Service {
   etd?: string;
   platform?: string;
   operator?: string;
+  isCancelled?: boolean;
+  delayReason?: string;
+  cancelReason?: string;
 }
 
 function useLiveServices(
@@ -147,13 +150,21 @@ export default function Services(
               </td>
               <td className="px-4 py-2 text-center">{service.platform}</td>
               <td className="px-4 py-2">
-                {service.origin && <StationLink {...service.origin} />}
-                {' to '}
-                {service.destination && (
-                  <StationLink {...service.destination} />
+                <p className={service.isCancelled ? 'line-through' : undefined}>
+                  {service.origin && <StationLink {...service.origin} />}
+                  {' to '}
+                  {service.destination && (
+                    <StationLink {...service.destination} />
+                  )}
+                  {' — '}
+                  {service.operator}
+                </p>
+                {service.delayReason && (
+                  <p className="italic">{service.delayReason}</p>
                 )}
-                {' — '}
-                {service.operator}
+                {service.cancelReason && (
+                  <p className="italic">{service.cancelReason}</p>
+                )}
               </td>
             </tr>
           ))}
