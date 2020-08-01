@@ -1,10 +1,8 @@
-import stations from '../../../data/station_codes.json';
+import stations from 'data/station_codes.json';
 import fuzzy from 'fuzzy';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-/**
- * @type {import('next').NextApiHandler}
- */
-export default (req, res) => {
+export default (req: NextApiRequest, res: NextApiResponse) => {
   const results = fuzzy.filter(String(req.query.search), stations, {
     extract(el) {
       return el.locationName;
