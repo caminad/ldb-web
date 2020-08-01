@@ -1,10 +1,10 @@
+import { Client as LiveDepartureBoardClient } from '@kitibyte/ldb/ldb.js';
+import ErrorBoundary from 'components/error-boundary';
 import Services from 'components/services';
 import stations from 'data/station_codes.json';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import DefaultErrorPage from 'next/error';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { Client as LiveDepartureBoardClient } from '@kitibyte/ldb/ldb.js';
 
 const liveDepartureBoardClient = new LiveDepartureBoardClient({
   accessToken: process.env.LDB_TOKEN,
@@ -50,7 +50,9 @@ export default function StationPage(
         <h1 className="text-4xl font-bold mb-4">
           Services via {props.services.locationName}
         </h1>
-        <Services {...props.services} />
+        <ErrorBoundary>
+          <Services {...props.services} />
+        </ErrorBoundary>
       </main>
     </>
   );

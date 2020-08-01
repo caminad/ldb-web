@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import StationSearch from 'components/station-search';
+import ErrorBoundary from 'components/error-boundary';
 
 export default function HomePage() {
   return (
@@ -13,7 +14,9 @@ export default function HomePage() {
           Unofficial National Rail Live Departure Boards
         </h1>
 
-        <StationSearch />
+        <ErrorBoundary>
+          <StationSearch />
+        </ErrorBoundary>
       </main>
     </div>
   );
