@@ -80,15 +80,18 @@ function Messages(props: { list: string[] }): JSX.Element {
     return <></>;
   }
 
+  const toggle = () => setExpanded((state) => !state);
+
   return (
     <ul
-      className={`font-casual space-y-2${
-        expanded ? '' : ' p-2 overflow-y-hidden h-16 shadow-inner rounded'
+      className={`font-casual space-y-2 cursor-pointer${
+        expanded ? '' : ' h-12 overflow-y-hidden shadow-inner rounded'
       }`}
-      onClick={() => setExpanded((state) => !state)}
+      onClick={toggle}
+      onKeyUp={(event) => event.key === 'Enter' && toggle()}
     >
       {props.list.map((message) => (
-        <li key={message}>
+        <li className={expanded ? undefined : 'opacity-50'} key={message}>
           {message
             .replace(/<\/?.*?>/g, '')
             .split('\n')
