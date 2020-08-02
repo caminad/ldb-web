@@ -21,7 +21,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
   const services = await liveDepartureBoardClient.request(
     'ArrivalsDepartures',
-    { crs: station.crs, numRows: 1 }
+    { crs: station.crs, numRows: 6 }
   );
   return { props: { services } };
 }
