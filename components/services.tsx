@@ -38,7 +38,7 @@ function useLiveServices(
 }
 
 function ValuePlaceholder() {
-  return <span className="opacity-50 font-sans">&mdash;</span>;
+  return <div className="opacity-50">&mdash;</div>;
 }
 
 function TimeToNow(props: { dateString: string }): JSX.Element {
@@ -104,26 +104,17 @@ function Messages(props: { list: string[] }): JSX.Element {
   );
 }
 
-function ServiceTime(props: {
-  label: string;
-  scheduled?: string;
-  estimated?: string;
-}) {
+function ServiceTime(props: { scheduled?: string; estimated?: string }) {
   if (!props.scheduled) {
     return <ValuePlaceholder />;
   }
+  if (props.estimated === 'On time') {
+    return <div>{props.scheduled}</div>;
+  }
   return (
-    <div className="text-sm">
-      <span className="text-xs font-light">{props.label}</span>{' '}
-      {props.estimated === 'On time' ? (
-        props.scheduled
-      ) : (
-        <>
-          <del className="line-through">{props.scheduled}</del>
-          <br />
-          <ins className="font-marker">{props.estimated}</ins>
-        </>
-      )}
+    <div>
+      <del className="line-through font-thin">{props.scheduled}</del>{' '}
+      <ins className="no-underline font-marker">{props.estimated}</ins>
     </div>
   );
 }
@@ -133,9 +124,10 @@ function ServicePlatform(props: { value?: string }) {
     return <ValuePlaceholder />;
   }
   return (
-    <div className="text-sm">
-      <span className="text-xs font-light">platform</span>{' '}
-      <span className="font-casual">{props.value}</span>
+    <div className="border rounded-full" title={`platform ${props.value}`}>
+      <span className="font-casual">
+        <small className="text-xs">platform</small> {props.value}
+      </span>
     </div>
   );
 }
@@ -161,41 +153,39 @@ export default function Services(
       <Messages list={ensureArray(services.nrccMessages)} />
       <div className="flex flex-col">
         {ensureArray(services.trainServices).map((service) => (
-          <div className="py-3 space-y-2 border-t" key={service.serviceID}>
-            <p className={service.isCancelled ? 'line-through' : undefined}>
-              {service.origin && <StationLink {...service.origin} />}
-              {ensureArray(service.destination).map((destination) => (
-                <span key={destination.crs}>
-                  {' '}
-                  to <StationLink {...destination} />
-                </span>
-              ))}{' '}
-              <span className="font-light">({service.operator})</span>
-            </p>
-            {service.delayReason && (
-              <p className="font-casual">
-                {service.isCancelled ? (
-                  <del className="line-through">{service.delayReason}</del>
-                ) : (
-                  <span>{service.delayReason}</span>
-                )}
-              </p>
-            )}
-            {service.cancelReason && (
-              <p className="font-casual">{service.cancelReason}</p>
-            )}
-            <div className="grid grid-cols-3 text-center">
-              <ServiceTime
-                label="arrives"
-                scheduled={service.sta}
-                estimated={service.eta}
-              />
+          <div
+            className="border-t flex items-stretch py-2 space-x-2"
+            key={service.serviceID}
+          >
+            <div className="flex flex-col justify-evenly w-40 text-center">
+              <ServiceTime scheduled={service.sta} estimated={service.eta} />
               <ServicePlatform value={service.platform} />
-              <ServiceTime
-                label="departs"
-                scheduled={service.std}
-                estimated={service.etd}
-              />
+              <ServiceTime scheduled={service.std} estimated={service.etd} />
+            </div>
+            <div className="flex flex-col justify-between w-full space-y-2">
+              <p className={service.isCancelled ? 'line-through' : undefined}>
+                {service.origin && <StationLink {...service.origin} />}
+                {ensureArray(service.destination).map((destination) => (
+                  <span key={destination.crs}>
+                    {' '}
+                    to <StationLink {...destination} />
+                  </span>
+                ))}
+                <br />
+                <span className="font-light">({service.operator})</span>
+              </p>
+              {service.delayReason && (
+                <p className="font-casual font-light">
+                  {service.isCancelled || service.cancelReason ? (
+                    <del className="line-through">{service.delayReason}</del>
+                  ) : (
+                    <span>{service.delayReason}</span>
+                  )}
+                </p>
+              )}
+              {service.cancelReason && (
+                <p className="font-casual">{service.cancelReason}</p>
+              )}
             </div>
           </div>
         ))}

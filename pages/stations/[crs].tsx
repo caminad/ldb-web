@@ -49,7 +49,7 @@ export default function StationPage(
 
       <main className="p-4 m-auto container">
         <div className="flex justify-between items-baseline mb-4">
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-4xl font-marker leading-none">
             Services via {props.services.locationName}
           </h1>
           <Link href="/">
