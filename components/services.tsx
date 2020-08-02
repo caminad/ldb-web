@@ -37,6 +37,10 @@ function useLiveServices(
   return data ?? initialServices;
 }
 
+function ValuePlaceholder() {
+  return <span className="opacity-50 font-sans">&mdash;</span>;
+}
+
 function TimeToNow(props: { dateString: string }): JSX.Element {
   const date = useMemo(() => parseISO(props.dateString), [props.dateString]);
 
@@ -61,53 +65,75 @@ function TimeToNow(props: { dateString: string }): JSX.Element {
   );
 }
 
-function UpdatedTime(props: { dateString: string | undefined }): JSX.Element {
-  if (!props.dateString) {
-    return <p>Loading...</p>;
-  }
+function UpdatedTime(props: { dateString: string }): JSX.Element {
   return (
-    <p>
-      Updated <TimeToNow dateString={props.dateString} />.
+    <p className="font-marker">
+      Updated <TimeToNow dateString={props.dateString} />
     </p>
   );
 }
 
 function Messages(props: { list: string[] }): JSX.Element {
+  const [expanded, setExpanded] = useState(false);
+
   if (props.list.length === 0) {
-    return <p>No Service Messages for this station</p>;
+    return <></>;
   }
+
   return (
-    <details>
-      <summary>Service Messages</summary>
-      <article className="prose">
-        <ul>
-          {props.list.map((message) => (
-            <li key={message}>
-              {message
-                .replace(/<\/?.*?>/g, '')
-                .split('\n')
-                .map((para) => (
-                  <p key={para}>{para}</p>
-                ))}
-            </li>
-          ))}
-        </ul>
-      </article>
-    </details>
+    <ul
+      className={`font-casual space-y-2${
+        expanded ? '' : ' p-2 overflow-y-hidden h-16 shadow-inner rounded'
+      }`}
+      onClick={() => setExpanded((state) => !state)}
+    >
+      {props.list.map((message) => (
+        <li key={message}>
+          {message
+            .replace(/<\/?.*?>/g, '')
+            .split('\n')
+            .map((para) => (
+              <p key={para}>{para}</p>
+            ))}
+        </li>
+      ))}
+    </ul>
   );
 }
 
-function ServiceTime(props: { scheduled?: string; estimated?: string }) {
+function ServiceTime(props: {
+  label: string;
+  scheduled?: string;
+  estimated?: string;
+}) {
+  if (!props.scheduled) {
+    return <ValuePlaceholder />;
+  }
   return (
-    <>
+    <div className="text-sm">
+      <span className="text-xs font-light">{props.label}</span>{' '}
       {props.estimated === 'On time' ? (
         props.scheduled
       ) : (
-        <span>
-          <s>{props.scheduled}</s> {props.estimated}
-        </span>
+        <>
+          <del className="line-through">{props.scheduled}</del>
+          <br />
+          <ins className="font-marker">{props.estimated}</ins>
+        </>
       )}
-    </>
+    </div>
+  );
+}
+
+function ServicePlatform(props: { value?: string }) {
+  if (!props.value) {
+    return <ValuePlaceholder />;
+  }
+  return (
+    <div className="text-sm">
+      <span className="text-xs font-light">platform</span>{' '}
+      <span className="font-casual">{props.value}</span>
+    </div>
   );
 }
 
@@ -127,49 +153,50 @@ export default function Services(
   const services = useLiveServices(props);
 
   return (
-    <>
+    <div className="space-y-4">
       <UpdatedTime dateString={services.generatedAt} />
       <Messages list={ensureArray(services.nrccMessages)} />
-      <table className="table-fixed">
-        <thead>
-          <tr>
-            <th className="px-4 py-2 w-1/8">Arrives</th>
-            <th className="px-4 py-2 w-1/8">Departs</th>
-            <th className="px-4 py-2 w-1/8">Platform</th>
-            <th className="px-4 py-2">Service</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ensureArray(services.trainServices).map((service) => (
-            <tr key={service.serviceID}>
-              <td className="px-4 py-2 text-center">
-                <ServiceTime scheduled={service.sta} estimated={service.eta} />
-              </td>
-              <td className="px-4 py-2 text-center">
-                <ServiceTime scheduled={service.std} estimated={service.etd} />
-              </td>
-              <td className="px-4 py-2 text-center">{service.platform}</td>
-              <td className="px-4 py-2">
-                <p className={service.isCancelled ? 'line-through' : undefined}>
-                  {service.origin && <StationLink {...service.origin} />}
-                  {' to '}
-                  {service.destination && (
-                    <StationLink {...service.destination} />
-                  )}
-                  {' — '}
-                  {service.operator}
-                </p>
-                {service.delayReason && (
-                  <p className="italic">{service.delayReason}</p>
+      <div className="flex flex-col">
+        {ensureArray(services.trainServices).map((service) => (
+          <div className="py-3 space-y-2 border-t" key={service.serviceID}>
+            <p className={service.isCancelled ? 'line-through' : undefined}>
+              {service.origin && <StationLink {...service.origin} />}
+              {ensureArray(service.destination).map((destination) => (
+                <span key={destination.crs}>
+                  {' '}
+                  to <StationLink {...destination} />
+                </span>
+              ))}{' '}
+              <span className="font-light">({service.operator})</span>
+            </p>
+            {service.delayReason && (
+              <p className="font-casual">
+                {service.isCancelled ? (
+                  <del className="line-through">{service.delayReason}</del>
+                ) : (
+                  <span>{service.delayReason}</span>
                 )}
-                {service.cancelReason && (
-                  <p className="italic">{service.cancelReason}</p>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
+              </p>
+            )}
+            {service.cancelReason && (
+              <p className="font-casual">{service.cancelReason}</p>
+            )}
+            <div className="grid grid-cols-3 text-center">
+              <ServiceTime
+                label="arrives"
+                scheduled={service.sta}
+                estimated={service.eta}
+              />
+              <ServicePlatform value={service.platform} />
+              <ServiceTime
+                label="departs"
+                scheduled={service.std}
+                estimated={service.etd}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

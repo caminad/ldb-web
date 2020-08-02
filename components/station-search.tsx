@@ -27,7 +27,7 @@ export default function StationSearch(): JSX.Element {
 
   return (
     <form
-      className="my-32 flex justify-center"
+      className="flex justify-center"
       onSubmit={(event) => {
         event.preventDefault();
         if (station) {
@@ -36,7 +36,7 @@ export default function StationSearch(): JSX.Element {
       }}
     >
       <input
-        className="max-w-full min-w-0 appearance-none px-6 py-3 rounded-lg rounded-r-none border-2 border-r-0 text-xl shadow-inner focus:outline-none focus:border-blue-600"
+        className="max-w-full min-w-0 appearance-none px-6 py-3 rounded-lg rounded-r-none border-2 border-r-0 text-xl shadow-inner font-casual focus:outline-none focus:border-blue-600"
         type="search"
         name="station"
         list="stations"
@@ -50,7 +50,7 @@ export default function StationSearch(): JSX.Element {
         ))}
       </datalist>
       <button
-        className="appearance-none px-6 py-3 rounded-lg rounded-l-none border-2 border-blue-600 bg-blue-600 text-xl text-white hover:shadow-lg"
+        className="appearance-none px-6 py-3 rounded-lg rounded-l-none border-2 border-blue-600 bg-blue-600 text-xl text-white font-casual hover:shadow-lg"
         type="submit"
       >
         Show<span className="hidden sm:inline"> Services</span>

@@ -4,13 +4,13 @@ import Head from 'next/head';
 
 export default function HomePage() {
   return (
-    <div>
+    <div className="h-screen">
       <Head>
         <title>Unofficial National Rail Live Departure Boards</title>
       </Head>
 
-      <main className="p-4 m-auto container">
-        <h1 className="text-4xl font-bold text-center">
+      <main className="p-4 h-full m-auto container flex flex-col justify-center space-y-8">
+        <h1 className="text-4xl text-center font-marker">
           Unofficial National Rail Live Departure Boards
         </h1>
 
