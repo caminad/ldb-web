@@ -7,5 +7,8 @@ module.exports = {
       sans: ['Inter', 'sans-serif'],
     },
   },
+  variants: {
+    boxShadow: ['responsive', 'hover', 'focus', 'focus-within'],
+  },
   plugins: [require('@tailwindcss/typography')],
 };

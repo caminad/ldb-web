@@ -10,20 +10,19 @@ export interface StationLinkProps {
 export default function StationLink(props: StationLinkProps): JSX.Element {
   const router = useRouter();
 
-  if (router.asPath === `/stations/${props.crs}`) {
+  if (router.asPath !== `/stations/${props.crs}`) {
     return (
       <span>
-        {props.locationName} {props.via}
-      </span>
-    );
-  } else {
-    return (
-      <>
         <Link href="/stations/[crs]" as={`/stations/${props.crs}`}>
           <a className="font-bold hover:underline">{props.locationName}</a>
         </Link>{' '}
         {props.via}
-      </>
+      </span>
     );
   }
+  return (
+    <span>
+      {props.locationName} {props.via}
+    </span>
+  );
 }
