@@ -1,13 +1,11 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-export interface StationLinkProps {
+export default function StationLink(props: {
   crs: string;
   locationName: string;
   via?: string;
-}
-
-export default function StationLink(props: StationLinkProps): JSX.Element {
+}): JSX.Element {
   const router = useRouter();
 
   if (router.asPath !== `/stations/${props.crs}`) {

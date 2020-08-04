@@ -6,18 +6,18 @@ import useSWR from 'swr';
 import AlterationReasons from './alteration-reasons';
 import RouteInfo from './route-info';
 import ScheduleInfo from './schedule-info';
-import { StationLinkProps } from './station-link';
 
-export interface ServicesProps {
-  generatedAt: string;
-  nrccMessages?: string | string[];
-  trainServices?: Service | Service[];
+type OneOrMany<T> = T | T[];
+
+interface Station {
+  crs: string;
+  locationName: string;
 }
 
 export interface Service {
   serviceID: string;
-  origin: StationLinkProps;
-  destination: StationLinkProps | StationLinkProps[];
+  origin: Station;
+  destination: OneOrMany<Station & { via?: string }>;
   operator: string;
   sta?: string;
   eta?: string;
@@ -29,13 +29,18 @@ export interface Service {
   cancelReason?: string;
 }
 
-function useLiveServices(initialServices: StationLinkProps & ServicesProps) {
-  const { data } = useSWR<StationLinkProps & ServicesProps>(
-    `/api/services/${initialServices.crs}?numRows=20`,
-    { refreshInterval: 30000 }
-  );
+function useLiveServices(crs: string) {
+  const { data } = useSWR<
+    Station & {
+      generatedAt: string;
+      nrccMessages?: OneOrMany<string>;
+      trainServices?: OneOrMany<Service>;
+    }
+  >(`/api/services/${crs}?numRows=20`, {
+    refreshInterval: 30000,
+  });
 
-  return data ?? initialServices;
+  return data;
 }
 
 function UpdatedTime(props: { dateString: string }) {
@@ -66,7 +71,7 @@ function UpdatedTime(props: { dateString: string }) {
   );
 }
 
-function Messages(props: { value: string[] | string }) {
+function Messages(props: { value: OneOrMany<string> }) {
   return (
     <details className="rounded border focus-within:shadow-outline transition-shadow duration-75">
       <summary className="p-2 cursor-pointer font-marker rounded focus:outline-none">
@@ -83,17 +88,18 @@ function Messages(props: { value: string[] | string }) {
   );
 }
 
-export default function Services(
-  props: StationLinkProps & ServicesProps
-): JSX.Element {
-  const services = useLiveServices(props);
+export default function Services(props: { crs: string }): JSX.Element {
+  const services = useLiveServices(props.crs);
 
   return (
     <div className="space-y-4">
-      <UpdatedTime dateString={services.generatedAt} />
-      {services.nrccMessages && <Messages value={services.nrccMessages} />}
+      {!services && <span className="font-marker">Loading...</span>}
+      {services?.generatedAt && (
+        <UpdatedTime dateString={services.generatedAt} />
+      )}
+      {services?.nrccMessages && <Messages value={services.nrccMessages} />}
       <ul className="flex flex-col">
-        {services.trainServices &&
+        {services?.trainServices &&
           castArray(services.trainServices).map((service) => (
             <li
               key={service.serviceID}

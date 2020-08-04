@@ -1,16 +1,10 @@
 import clsx from 'clsx';
 import castArray from 'lodash/castArray';
 import { Fragment } from 'react';
-import StationLink, { StationLinkProps } from './station-link';
+import { Service } from './services';
+import StationLink from './station-link';
 
-interface RouteInfoProps {
-  isCancelled?: boolean;
-  origin: StationLinkProps;
-  destination: StationLinkProps | StationLinkProps[];
-  operator: string;
-}
-
-export default function RouteInfo(props: RouteInfoProps) {
+export default function RouteInfo(props: Service) {
   return (
     <p className={clsx(props.isCancelled && 'line-through opacity-50')}>
       <StationLink {...props.origin} />
