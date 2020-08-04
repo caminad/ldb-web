@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@kitibyte/ldb": "github:kitibyte/ldb",
+    "@next/bundle-analyzer": "^9.5.1",
     "@tailwindcss/typography": "^0.2.0",
     "ajv": "^6.12.3",
     "clsx": "^1.1.1",

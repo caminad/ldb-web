@@ -1,25 +1,23 @@
-import stations from 'data/station_codes.json';
-import { useRouter } from 'next/router';
-import { ChangeEventHandler, useMemo, useState } from 'react';
+import stationData from 'data/station_codes.json';
+import Router from 'next/router';
+import { ChangeEventHandler, useState } from 'react';
 
 const collator = new Intl.Collator('en', {
   usage: 'search',
   sensitivity: 'base',
 });
 
-function findStation(search: string) {
-  return stations.find((item) => {
-    return collator.compare(item.locationName, search) === 0;
-  });
+async function showStation(search: string) {
+  for (const [name, crs] of stationData) {
+    if (collator.compare(name, search) === 0) {
+      await Router.push('/stations/[crs]', `/stations/${crs}`);
+      return;
+    }
+  }
 }
 
 export default function StationSearch(): JSX.Element {
-  const router = useRouter();
   const [search, setSearch] = useState('');
-
-  const station = useMemo(() => {
-    return findStation(search);
-  }, [search]);
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     setSearch(event.currentTarget.value);
@@ -30,9 +28,7 @@ export default function StationSearch(): JSX.Element {
       className="flex justify-center"
       onSubmit={(event) => {
         event.preventDefault();
-        if (station) {
-          router.push('/stations/[crs]', `/stations/${station.crs}`);
-        }
+        showStation(search);
       }}
     >
       <input
@@ -45,8 +41,8 @@ export default function StationSearch(): JSX.Element {
         onChange={handleChange}
       />
       <datalist id="stations">
-        {stations.map((station) => (
-          <option key={station.crs}>{station.locationName}</option>
+        {stationData.map((station) => (
+          <option key={station[1]}>{station[0]}</option>
         ))}
       </datalist>
       <button

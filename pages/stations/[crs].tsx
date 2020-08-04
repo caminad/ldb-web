@@ -1,28 +1,37 @@
 import { Client as LiveDepartureBoardClient } from '@kitibyte/ldb/ldb.js';
 import ErrorBoundary from 'components/error-boundary';
-import Services from 'components/services';
-import stations from 'data/station_codes.json';
+import Services, { ServicesProps } from 'components/services';
+import { StationLinkProps } from 'components/station-link';
+import stationData from 'data/station_codes.json';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import DefaultErrorPage from 'next/error';
 import Head from 'next/head';
 import Link from 'next/link';
+import { ParsedUrlQuery } from 'querystring';
 
 const liveDepartureBoardClient = new LiveDepartureBoardClient({
   accessToken: process.env.LDB_TOKEN,
 });
 
+async function fetchServices(
+  params: ParsedUrlQuery | undefined
+): Promise<(StationLinkProps & ServicesProps) | undefined> {
+  for (const [, crs] of stationData) {
+    if (crs === params?.crs) {
+      return liveDepartureBoardClient.request('ArrivalsDepartures', {
+        crs,
+        numRows: 6,
+      });
+    }
+  }
+}
+
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const station = stations.find((item) => {
-    return item.crs === context.params?.crs;
-  });
-  if (!station) {
+  const services = await fetchServices(context.params);
+  if (!services) {
     context.res.statusCode = 404;
     return { props: {} };
   }
-  const services = await liveDepartureBoardClient.request(
-    'ArrivalsDepartures',
-    { crs: station.crs, numRows: 6 }
-  );
   return { props: { services } };
 }
 
