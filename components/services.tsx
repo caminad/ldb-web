@@ -1,6 +1,6 @@
 import { format, formatDistanceToNow, parseISO } from 'date-fns';
 import enGB from 'date-fns/locale/en-GB';
-import { ensureArray } from 'helpers';
+import castArray from 'lodash/castArray';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import AlterationReasons from './alteration-reasons';
@@ -73,7 +73,7 @@ function Messages(props: { value: string[] | string }) {
         Messages
       </summary>
       <ul className="p-2 font-casual space-y-2 border-t">
-        {ensureArray(props.value).map((message, index) => (
+        {castArray(props.value).map((message, index) => (
           <li key={`${index}-${message}`} className="whitespace-pre-line">
             {message.replace(/<\/?.*?>/g, '')}
           </li>
@@ -94,7 +94,7 @@ export default function Services(
       {services.nrccMessages && <Messages value={services.nrccMessages} />}
       <ul className="flex flex-col">
         {services.trainServices &&
-          ensureArray(services.trainServices).map((service) => (
+          castArray(services.trainServices).map((service) => (
             <li
               key={service.serviceID}
               className="p-2 border-t flex items-stretch py-2 space-x-4"

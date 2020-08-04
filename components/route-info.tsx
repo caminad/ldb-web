@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { ensureArray } from 'helpers';
+import castArray from 'lodash/castArray';
 import { Fragment } from 'react';
 import StationLink, { StationLinkProps } from './station-link';
 
@@ -14,7 +14,7 @@ export default function RouteInfo(props: RouteInfoProps) {
   return (
     <p className={clsx(props.isCancelled && 'line-through opacity-50')}>
       <StationLink {...props.origin} />
-      {ensureArray(props.destination).map((destination) => (
+      {castArray(props.destination).map((destination) => (
         <Fragment key={destination.crs}>
           {' '}
           to <StationLink {...destination} />
