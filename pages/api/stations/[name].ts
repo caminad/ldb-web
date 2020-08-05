@@ -1,16 +1,14 @@
 import { Client as LiveDepartureBoardClient } from '@kitibyte/ldb/ldb.js';
 import { ArrivalsDepartures } from '@kitibyte/ldb/operations.js';
 import Ajv from 'ajv';
-import station_codes from 'data/station_codes.json';
-import { isObject } from 'lodash';
+import stations from 'data/stations.json';
+import invert from 'lodash/invert';
+import isObject from 'lodash/isObject';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-const stationsByCode = new Map<string, string>();
-const stationsByName = new Map<string, string>();
-for (const [name, code] of station_codes) {
-  stationsByCode.set(code, name);
-  stationsByName.set(name, code);
-}
+const stationsByCRS = invert(stations);
+
+const isStationName = (x: any): x is keyof typeof stations => x in stations;
 
 const client = new LiveDepartureBoardClient({
   accessToken: process.env.LDB_TOKEN,
@@ -21,9 +19,8 @@ const validate = new Ajv({ coerceTypes: true }).compile(
 );
 
 function replaceNameWithCRS(query: { [key: string]: string | string[] }) {
-  const code = stationsByName.get(query.name as string);
-  if (code) {
-    query.crs = code;
+  if (isStationName(query.name)) {
+    query.crs = stations[query.name];
     delete query.name;
     return true;
   }
@@ -31,11 +28,9 @@ function replaceNameWithCRS(query: { [key: string]: string | string[] }) {
 }
 
 function setLocationNamesFromCRS(obj: any): any {
-  for (const val of Object.values(obj).filter(isObject)) {
-    setLocationNamesFromCRS(val);
-  }
+  Object.values(obj).filter(isObject).forEach(setLocationNamesFromCRS);
   if (obj.crs) {
-    obj.locationName = stationsByCode.get(obj.crs);
+    obj.locationName = stationsByCRS[obj.crs];
   }
   return obj;
 }

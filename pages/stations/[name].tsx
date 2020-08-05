@@ -1,12 +1,11 @@
 import ErrorBoundary from 'components/error-boundary';
 import Services from 'components/services';
-import station_codes from 'data/station_codes.json';
-import { castArray } from 'lodash';
+import stations from 'data/stations.json';
+import castArray from 'lodash/castArray';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import DefaultErrorPage from 'next/error';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 const collator = new Intl.Collator('en-GB', {
   sensitivity: 'base',
@@ -15,7 +14,7 @@ const collator = new Intl.Collator('en-GB', {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const nameParam = castArray(context.params?.name)[0];
-  for (const [name] of station_codes) {
+  for (const name of Object.keys(stations)) {
     if (collator.compare(name, nameParam) === 0) {
       return { props: { name } };
     }
@@ -27,8 +26,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 export default function StationPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
-  const router = useRouter();
-
   if (!props.name) {
     return (
       <>
