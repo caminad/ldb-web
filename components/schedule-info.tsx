@@ -1,72 +1,80 @@
 import clsx from 'clsx';
-import { ReactNode } from 'react';
 
-function Row(props: {
-  label: string;
-  children?: ReactNode;
-  className?: string;
-  title?: string;
+function Label(props: { children: string | undefined }) {
+  return <dt className="opacity-50 font-light text-xs">{props.children}</dt>;
+}
+
+function ScheduledTime(props: {
+  children: string | undefined;
+  onTime: boolean;
 }) {
   return (
-    <div
-      className={clsx('grid grid-cols-2 items-baseline', props.className)}
-      title={props.title}
+    <dd
+      className={clsx({
+        'opacity-50 line-through': props.children && !props.onTime,
+        'border-b h-0 w-1/2 m-auto': !props.children,
+      })}
     >
-      <span className="opacity-50 font-light text-xs">{props.label}</span>
-      {props.children || (
-        <span className="border-b h-0 w-1/2 self-center m-auto" />
-      )}
-    </div>
+      {props.children}
+    </dd>
   );
 }
 
-function Alteration(props: { scheduled: string; estimated?: string }) {
-  const isTimeEstimate = props.estimated?.includes(':');
-
+function EstimatedTime(props: { children: string | undefined }) {
   return (
-    <>
-      <del className="line-through opacity-50">{props.scheduled}</del>
-      <ins
-        className={clsx(
-          'no-underline font-marker',
-          isTimeEstimate ? 'col-start-2' : 'col-span-2'
-        )}
-      >
-        {props.estimated}
-      </ins>
-    </>
+    <dd
+      className={clsx('font-marker col-start-2', {
+        'col-start-2': props.children?.includes(':'),
+        'sr-only': props.children === 'On time',
+      })}
+    >
+      {props.children}
+    </dd>
   );
 }
 
-function Time(props: { scheduled: string; estimated?: string }) {
-  if (props.scheduled && props.estimated !== 'On time') {
-    return <Alteration {...props} />;
-  }
-  return <>{props.scheduled}</>;
+function Platform(props: { children: string | undefined }) {
+  return (
+    <dd
+      className={clsx({
+        'text-2xl font-casual': props.children,
+        'border-b h-0 w-1/2 m-auto': !props.children,
+      })}
+    >
+      {props.children}
+    </dd>
+  );
 }
 
-interface ScheduleInfoProps {
-  platform?: string;
+export default function ScheduleInfo(props: {
+  className?: string;
   sta?: string;
   eta?: string;
+  platform?: string;
   std?: string;
   etd?: string;
-}
-
-export default function ScheduleInfo(props: ScheduleInfoProps) {
+}) {
   return (
-    <div className="flex flex-col space-y-2 justify-start w-40 text-center">
-      <Row label="arrives">
-        {props.sta && <Time scheduled={props.sta} estimated={props.eta} />}
-      </Row>
-      <Row label="platform">
-        {props.platform && (
-          <span className="text-2xl font-casual">{props.platform}</span>
-        )}
-      </Row>
-      <Row label="departs">
-        {props.std && <Time scheduled={props.std} estimated={props.etd} />}
-      </Row>
-    </div>
+    <dl
+      className={clsx(
+        'grid grid-cols-2 text-center items-baseline',
+        props.className
+      )}
+    >
+      <Label>arrives</Label>
+      <ScheduledTime onTime={props.eta === 'On time'}>
+        {props.sta}
+      </ScheduledTime>
+      <EstimatedTime>{props.eta}</EstimatedTime>
+
+      <Label>platform</Label>
+      <Platform>{props.platform}</Platform>
+
+      <Label>departs</Label>
+      <ScheduledTime onTime={props.etd === 'On time'}>
+        {props.std}
+      </ScheduledTime>
+      <EstimatedTime>{props.etd}</EstimatedTime>
+    </dl>
   );
 }

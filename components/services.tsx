@@ -3,7 +3,6 @@ import enGB from 'date-fns/locale/en-GB';
 import castArray from 'lodash/castArray';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
-import AlterationReasons from './alteration-reasons';
 import RouteInfo from './route-info';
 import ScheduleInfo from './schedule-info';
 
@@ -103,15 +102,10 @@ export default function Services(props: { crs: string }): JSX.Element {
           castArray(services.trainServices).map((service) => (
             <li
               key={service.serviceID}
-              className="p-2 border-t flex items-stretch py-2 space-x-4"
+              className="py-2 border-t flex items-stretch space-x-4"
             >
-              <ScheduleInfo {...service} />
-              <div className="flex flex-col justify-start w-full space-y-2">
-                <RouteInfo {...service} />
-                <AlterationReasons
-                  value={[service.delayReason, service.cancelReason]}
-                />
-              </div>
+              <ScheduleInfo className="w-40" {...service} />
+              <RouteInfo className="w-full" {...service} />
             </li>
           ))}
       </ul>
