@@ -1,7 +1,6 @@
-import { format, formatDistanceToNow, parseISO } from 'date-fns';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 import enGB from 'date-fns/locale/en-GB';
 import castArray from 'lodash/castArray';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import RouteInfo from './route-info';
 import ScheduleInfo from './schedule-info';
@@ -36,38 +35,24 @@ function useLiveServices(crs: string) {
       trainServices?: OneOrMany<Service>;
     }
   >(`/api/services/${crs}?numRows=20`, {
-    refreshInterval: 30000,
+    refreshInterval: 25000,
   });
 
   return data;
 }
 
-function UpdatedTime(props: { dateString: string }) {
-  const date = useMemo(() => parseISO(props.dateString), [props.dateString]);
+function useDistanceToNow(isoDateString?: string) {
+  const { data } = useSWR([isoDateString, formatDistanceToNow], {
+    fetcher(key) {
+      return formatDistanceToNow(parseISO(key), {
+        locale: enGB,
+        addSuffix: true,
+      });
+    },
+    refreshInterval: 1000,
+  });
 
-  const formatDateToNow = useCallback(() => {
-    return formatDistanceToNow(date, { addSuffix: true, locale: enGB });
-  }, [date]);
-
-  const [formatted, setFormatted] = useState(formatDateToNow);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFormatted(formatDateToNow);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [formatDateToNow, setFormatted]);
-
-  return (
-    <time
-      className="font-marker"
-      dateTime={props.dateString}
-      title={format(date, 'PPp', { locale: enGB })}
-    >
-      Updated {formatted}
-    </time>
-  );
+  return data;
 }
 
 function Messages(props: { value: OneOrMany<string> }) {
@@ -89,13 +74,13 @@ function Messages(props: { value: OneOrMany<string> }) {
 
 export default function Services(props: { crs: string }): JSX.Element {
   const services = useLiveServices(props.crs);
+  const distanceToNow = useDistanceToNow(services?.generatedAt);
 
   return (
     <div className="space-y-4">
-      {!services && <span className="font-marker">Loading...</span>}
-      {services?.generatedAt && (
-        <UpdatedTime dateString={services.generatedAt} />
-      )}
+      <span className="font-marker">
+        {distanceToNow ? `Updated ${distanceToNow}` : `Loading...`}
+      </span>
       {services?.nrccMessages && <Messages value={services.nrccMessages} />}
       <ul className="flex flex-col">
         {services?.trainServices &&
