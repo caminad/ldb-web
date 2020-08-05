@@ -6,6 +6,8 @@ import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import DefaultErrorPage from 'next/error';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 const collator = new Intl.Collator('en-GB', {
   sensitivity: 'base',
@@ -16,7 +18,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const nameParam = castArray(context.params?.name)[0];
   for (const name of Object.keys(stations)) {
     if (collator.compare(name, nameParam) === 0) {
-      return { props: { name } };
+      const isExact = name === nameParam;
+
+      if (!isExact) {
+        context.res.statusCode = 307;
+        context.res.setHeader('location', name);
+      }
+
+      return { props: { name, isExact } };
     }
   }
   context.res.statusCode = 404;
@@ -26,6 +35,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 export default function StationPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (props.isExact === false) {
+      router.replace(
+        `/stations/[name]`,
+        `/stations/${encodeURIComponent(props.name)}`
+      );
+    }
+  }, [props.isExact, props.name]);
+
   if (!props.name) {
     return (
       <>
