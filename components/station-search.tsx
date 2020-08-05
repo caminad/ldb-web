@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import { ChangeEventHandler, useState } from 'react';
+import React, { ChangeEventHandler, useState } from 'react';
 import useSWR from 'swr';
 
 export default function StationSearch(): JSX.Element {
