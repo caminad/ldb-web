@@ -2,17 +2,18 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 export default function StationLink(props: {
-  crs: string;
-  locationName: string;
+  children: string;
   via?: string;
 }): JSX.Element {
   const router = useRouter();
 
-  if (router.asPath !== `/stations/${props.crs}`) {
+  const asPath = `/stations/${encodeURIComponent(props.children)}`;
+
+  if (router.asPath !== asPath) {
     return (
       <span>
-        <Link href="/stations/[crs]" as={`/stations/${props.crs}`}>
-          <a className="font-bold hover:underline">{props.locationName}</a>
+        <Link href="/stations/[name]" as={asPath}>
+          <a className="font-bold hover:underline">{props.children}</a>
         </Link>{' '}
         {props.via}
       </span>
@@ -20,7 +21,7 @@ export default function StationLink(props: {
   }
   return (
     <span>
-      {props.locationName} {props.via}
+      {props.children} {props.via}
     </span>
   );
 }

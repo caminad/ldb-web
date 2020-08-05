@@ -7,15 +7,10 @@ import ScheduleInfo from './schedule-info';
 
 type OneOrMany<T> = T | T[];
 
-interface Station {
-  crs: string;
-  locationName: string;
-}
-
 export interface Service {
   serviceID: string;
-  origin: Station;
-  destination: OneOrMany<Station & { via?: string }>;
+  origin: { locationName: string };
+  destination: OneOrMany<{ locationName: string; via?: string }>;
   operator: string;
   sta?: string;
   eta?: string;
@@ -27,14 +22,13 @@ export interface Service {
   cancelReason?: string;
 }
 
-function useLiveServices(crs: string) {
-  const { data } = useSWR<
-    Station & {
-      generatedAt: string;
-      nrccMessages?: OneOrMany<string>;
-      trainServices?: OneOrMany<Service>;
-    }
-  >(`/api/services/${crs}?numRows=20`, {
+function useLiveServices(locationName: string) {
+  const { data } = useSWR<{
+    locationName: string;
+    generatedAt: string;
+    nrccMessages?: OneOrMany<string>;
+    trainServices?: OneOrMany<Service>;
+  }>(`/api/stations/${encodeURIComponent(locationName)}?numRows=20`, {
     refreshInterval: 25000,
   });
 
@@ -72,8 +66,8 @@ function Messages(props: { value: OneOrMany<string> }) {
   );
 }
 
-export default function Services(props: { crs: string }): JSX.Element {
-  const services = useLiveServices(props.crs);
+export default function Services(props: { locationName: string }): JSX.Element {
+  const services = useLiveServices(props.locationName);
   const distanceToNow = useDistanceToNow(services?.generatedAt);
 
   return (

@@ -1,15 +1,23 @@
 import ErrorBoundary from 'components/error-boundary';
 import Services from 'components/services';
-import stationData from 'data/station_codes.json';
+import station_codes from 'data/station_codes.json';
+import { castArray } from 'lodash';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import DefaultErrorPage from 'next/error';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+const collator = new Intl.Collator('en-GB', {
+  sensitivity: 'base',
+  usage: 'search',
+});
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  for (const [locationName, crs] of stationData) {
-    if (crs === context.params?.crs) {
-      return { props: { crs, locationName } };
+  const nameParam = castArray(context.params?.name)[0];
+  for (const [name] of station_codes) {
+    if (collator.compare(name, nameParam) === 0) {
+      return { props: { name } };
     }
   }
   context.res.statusCode = 404;
@@ -19,7 +27,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 export default function StationPage(
   props: InferGetServerSidePropsType<typeof getServerSideProps>
 ) {
-  if (!props.crs) {
+  const router = useRouter();
+
+  if (!props.name) {
     return (
       <>
         <Head>
@@ -33,14 +43,14 @@ export default function StationPage(
   return (
     <>
       <Head>
-        <title>Services via {props.locationName}</title>
+        <title>Services via {props.name}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="p-4 m-auto container">
         <div className="flex justify-between items-baseline mb-4">
           <h1 className="text-4xl font-marker leading-none">
-            Services via {props.locationName}
+            Services via {props.name}
           </h1>
           <Link href="/">
             <a className="px-4 text-4xl opacity-50" title="Home">
@@ -49,7 +59,7 @@ export default function StationPage(
           </Link>
         </div>
         <ErrorBoundary>
-          <Services crs={props.crs} />
+          <Services locationName={props.name} />
         </ErrorBoundary>
       </main>
     </>

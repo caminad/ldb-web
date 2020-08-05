@@ -16,11 +16,13 @@ export default function RouteInfo(
           'line-through opacity-50': props.isCancelled,
         })}
       >
-        <StationLink {...props.origin} />
+        <StationLink>{props.origin.locationName}</StationLink>
         {castArray(props.destination).map((destination) => (
-          <Fragment key={destination.crs}>
-            {' '}
-            to <StationLink {...destination} />
+          <Fragment key={destination.locationName}>
+            {' to '}
+            <StationLink via={destination.via}>
+              {destination.locationName}
+            </StationLink>
           </Fragment>
         ))}
       </p>
