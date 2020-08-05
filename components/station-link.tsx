@@ -1,27 +1,28 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import React from 'react';
 
 export default function StationLink(props: {
   children: string;
   via?: string;
+  isCurrent: boolean;
 }): JSX.Element {
-  const router = useRouter();
-
-  const asPath = `/stations/${encodeURIComponent(props.children)}`;
-
-  if (router.asPath !== asPath) {
+  if (props.isCurrent) {
     return (
       <span>
-        <Link href="/stations/[name]" as={asPath}>
-          <a className="font-bold hover:underline">{props.children}</a>
-        </Link>{' '}
-        {props.via}
+        {props.children} {props.via}
       </span>
     );
   }
+
   return (
     <span>
-      {props.children} {props.via}
+      <Link
+        href="/stations/[name]"
+        as={`/stations/${encodeURIComponent(props.children)}`}
+      >
+        <a className="font-bold hover:underline">{props.children}</a>
+      </Link>{' '}
+      {props.via}
     </span>
   );
 }

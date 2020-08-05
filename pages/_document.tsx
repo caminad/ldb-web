@@ -6,8 +6,14 @@ export default class Document extends NextDocument {
       <Html lang="en">
         <Head>
           <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&amp;family=Kalam&amp;family=Permanent+Marker&amp;display=swap"
+            rel="preconnect"
+            href="https://fonts.googleapis.com/"
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com/"
+            crossOrigin="anonymous"
           />
         </Head>
         <body>

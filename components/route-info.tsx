@@ -5,7 +5,7 @@ import { Service } from './services';
 import StationLink from './station-link';
 
 export default function RouteInfo(
-  props: Service & { className?: string }
+  props: Service & { className?: string; currentLocationName: string }
 ): JSX.Element {
   return (
     <div
@@ -16,11 +16,18 @@ export default function RouteInfo(
           'line-through opacity-50': props.isCancelled,
         })}
       >
-        <StationLink>{props.origin.locationName}</StationLink>
+        <StationLink
+          isCurrent={props.currentLocationName === props.origin.locationName}
+        >
+          {props.origin.locationName}
+        </StationLink>
         {castArray(props.destination).map((destination) => (
           <Fragment key={destination.locationName}>
             {' to '}
-            <StationLink via={destination.via}>
+            <StationLink
+              via={destination.via}
+              isCurrent={props.currentLocationName === destination.locationName}
+            >
               {destination.locationName}
             </StationLink>
           </Fragment>

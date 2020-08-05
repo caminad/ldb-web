@@ -1,0 +1,29 @@
+import React from 'react';
+import '../styles/tailwind.css';
+import ErrorBoundary from './error-boundary';
+
+export default { title: 'ErrorBoundary' };
+
+function ExampleComponent() {
+  return <p className="border rounded p-4 font-marker">Example content.</p>;
+}
+
+function ThrowingComponent(): JSX.Element {
+  throw new Error('Oh no');
+}
+
+export function withContent() {
+  return (
+    <ErrorBoundary>
+      <ExampleComponent />
+    </ErrorBoundary>
+  );
+}
+
+export function withError() {
+  return (
+    <ErrorBoundary>
+      <ThrowingComponent />
+    </ErrorBoundary>
+  );
+}

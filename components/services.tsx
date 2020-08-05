@@ -84,7 +84,11 @@ export default function Services(props: { locationName: string }): JSX.Element {
               className="py-2 border-t flex items-stretch space-x-4"
             >
               <ScheduleInfo className="w-40" {...service} />
-              <RouteInfo className="w-full" {...service} />
+              <RouteInfo
+                className="w-full"
+                currentLocationName={props.locationName}
+                {...service}
+              />
             </li>
           ))}
       </ul>
