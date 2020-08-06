@@ -1,8 +1,8 @@
 import clsx from 'clsx';
+import { Service } from 'components/services';
+import StationLink from 'components/station-link';
 import castArray from 'lodash/castArray';
 import { Fragment } from 'react';
-import { Service } from './services';
-import StationLink from './station-link';
 
 export default function RouteInfo(
   props: Service & { className?: string; currentLocationName: string }

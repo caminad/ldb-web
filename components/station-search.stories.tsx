@@ -1,6 +1,5 @@
-import React from 'react';
-import '../styles/tailwind.css';
-import StationSearch from './station-search';
+import StationSearch from 'components/station-search';
+import 'styles/tailwind.css';
 
 export default {
   title: 'StationSearch',

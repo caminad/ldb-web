@@ -1,6 +1,5 @@
-import React from 'react';
-import '../styles/tailwind.css';
-import StationLink from './station-link';
+import StationLink from 'components/station-link';
+import 'styles/tailwind.css';
 
 export default {
   title: 'StationLink',

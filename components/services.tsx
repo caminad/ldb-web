@@ -1,9 +1,9 @@
+import RouteInfo from 'components/route-info';
+import ScheduleInfo from 'components/schedule-info';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import enGB from 'date-fns/locale/en-GB';
 import castArray from 'lodash/castArray';
 import useSWR from 'swr';
-import RouteInfo from './route-info';
-import ScheduleInfo from './schedule-info';
 
 type OneOrMany<T> = T | T[];
 

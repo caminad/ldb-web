@@ -1,9 +1,9 @@
-import React from 'react';
-import '../styles/tailwind.css';
-import ErrorBoundary from './error-boundary';
+import ErrorBoundary from 'components/error-boundary';
+import 'styles/tailwind.css';
 
 export default {
   title: 'ErrorBoundary',
+  component: ErrorBoundary,
 };
 
 function ExampleComponent() {
