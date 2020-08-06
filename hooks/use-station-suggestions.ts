@@ -4,7 +4,6 @@ import useSWR from 'swr';
 
 /**
  * Returns a list of station names matching the search term, and a function to update the search term.
- * Stale data is returned until the current request has completed.
  */
 export default function useStationSuggestions(): [
   string[],
