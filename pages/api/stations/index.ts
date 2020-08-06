@@ -9,7 +9,7 @@ const targets = Object.keys(stations).map(fuzzysort.prepare);
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const search = decodeName(castArray(req.query.q)[0]);
   const results = fuzzysort.go(search, targets, {
-    limit: 20,
+    limit: 10,
   });
   res.json(results.map((result) => result.target));
 };

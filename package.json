@@ -25,6 +25,7 @@
     "tailwindcss": "^1.6.0"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^6.0.0-rc.27",
     "@storybook/addon-controls": "^6.0.0-rc.27",
     "@storybook/addon-docs": "^6.0.0-rc.27",
     "@storybook/react": "^6.0.0-rc.27",
@@ -34,6 +35,6 @@
     "@types/react": "^16.9.44",
     "jest": "^26.2.2",
     "ts-jest": "^26.1.4",
-    "typescript": "^3.9.7"
+    "typescript": "^4.1.0-dev.20200806"
   }
 }

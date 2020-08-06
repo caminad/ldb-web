@@ -5,7 +5,11 @@ const rootDir = path.resolve('.');
 
 module.exports = {
   stories: [path.resolve(rootDir, 'components/*.stories.tsx')],
-  addons: ['@storybook/addon-docs', '@storybook/addon-controls'],
+  addons: [
+    '@storybook/addon-docs',
+    '@storybook/addon-controls',
+    '@storybook/addon-actions',
+  ],
   typescript: {
     reactDocgen: 'react-docgen',
   },

@@ -4,7 +4,7 @@ import Link from 'next/link';
 export default function StationLink(props: {
   children: string;
   via?: string;
-  isCurrent: boolean;
+  isCurrent?: boolean;
 }): JSX.Element {
   if (props.isCurrent) {
     return (

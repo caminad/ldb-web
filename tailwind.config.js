@@ -9,6 +9,7 @@ module.exports = {
   },
   variants: {
     boxShadow: ['responsive', 'hover', 'focus', 'focus-within'],
+    display: ['responsive', 'group-hover', 'group-focus'],
   },
   plugins: [require('@tailwindcss/typography')],
 };
