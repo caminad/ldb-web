@@ -16,7 +16,6 @@ export default function StationSearch(): JSX.Element {
         `/stations/${encodeName(topSuggestion)}`
       );
     }
-    console.log(topSuggestion);
   }, [topSuggestion]);
 
   return (

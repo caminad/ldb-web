@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import useUniqueId from 'hooks/use-unique-id';
 import { encodeName } from 'models/station';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 
 // Icons from https://heroicons.dev/
@@ -11,23 +12,45 @@ export default function SearchBox(props: {
   suggestions: string[];
   onValue?: (value: string) => void;
 }): JSX.Element {
+  const router = useRouter();
   const inputId = useUniqueId('search-box-input-');
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [value, setValue] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const topSuggestion = props.suggestions[0];
 
   useEffect(() => {
-    props.onValue?.(value);
-  }, [value]);
+    if (topSuggestion) {
+      router.prefetch(
+        `/stations/[name]`,
+        `/stations/${encodeName(topSuggestion)}`
+      );
+    }
+  }, [topSuggestion]);
+
+  useEffect(() => {
+    props.onValue?.(searchTerm);
+  }, [searchTerm]);
 
   return (
     <div>
       <div
         className={clsx(
           'border-2 focus-within:shadow-outline rounded-lg p-2 bg-white flex justify-center',
-          { 'border-blue-600': value !== '' }
+          { 'border-blue-600': searchTerm !== '' }
         )}
       >
-        <div className="flex">
+        <form
+          className="flex"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (topSuggestion) {
+              router.push(
+                `/stations/[name]`,
+                `/stations/${encodeName(topSuggestion)}`
+              );
+            }
+          }}
+        >
           <label
             className="flex items-center pl-2 opacity-50"
             htmlFor={inputId}
@@ -50,28 +73,28 @@ export default function SearchBox(props: {
             className="appearance-none flex-grow text-2xl min-w-0 pl-2 font-casual focus:outline-none"
             ref={inputRef}
             id={inputId}
-            value={value}
+            value={searchTerm}
             type="search"
             autoCapitalize="off"
             autoCorrect="off"
             autoComplete="off"
             spellCheck={false}
             placeholder={props.label}
-            onChange={(event) => setValue(event.currentTarget.value)}
+            onChange={(event) => setSearchTerm(event.currentTarget.value)}
           />
-        </div>
+        </form>
         <button
           className={clsx(
             'relative group flex items-center opacity-50 hover:text-red-600 hover:opacity-100 focus:outline-none focus:text-red-600 focus:opacity-100',
-            { hidden: value === '' }
+            { hidden: searchTerm === '' }
           )}
           onClick={(event) => {
             event.preventDefault();
-            setValue('');
+            setSearchTerm('');
             inputRef.current?.focus();
           }}
         >
-          {value !== '' && (
+          {searchTerm !== '' && (
             <svg
               className="absolute right-0 z-10"
               width={20}
@@ -86,7 +109,7 @@ export default function SearchBox(props: {
               ></path>
             </svg>
           )}
-          {value !== '' && (
+          {searchTerm !== '' && (
             <span className="hidden absolute right-0 pl-1 pr-6 py-2 bg-white group-hover:block group-focus:block">
               clear
             </span>
