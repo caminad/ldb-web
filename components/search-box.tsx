@@ -1,35 +1,48 @@
+// Icons from https://heroicons.dev/
+
 import clsx from 'clsx';
-import useUniqueId from 'hooks/use-unique-id';
-import { encodeName } from 'models/station';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 
-// Icons from https://heroicons.dev/
+const inputId = 'search-box-input'; // Assumes that this component is only rendered once per page.
+
+function selectNext<T>(x: T | undefined, xs: T[]): T | undefined {
+  return xs[xs.indexOf(x as T) + 1] || xs[0];
+}
+function selectPrevious<T>(x: T | undefined, xs: T[]): T | undefined {
+  return xs[xs.indexOf(x as T) - 1] || xs[xs.length - 1];
+}
 
 export default function SearchBox(props: {
   label: string;
   suggestions: string[];
+  href: string;
+  asPathFn: (value: string) => string;
   onValue?: (value: string) => void;
 }): JSX.Element {
   const router = useRouter();
-  const inputId = useUniqueId('search-box-input-');
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const topSuggestion = props.suggestions[0];
+  const [selected, setSelected] = useState<string | undefined>(
+    props.suggestions[0]
+  );
 
   useEffect(() => {
-    if (topSuggestion) {
-      router.prefetch(
-        `/stations/[name]`,
-        `/stations/${encodeName(topSuggestion)}`
-      );
+    if (selected) {
+      router.prefetch(props.href, props.asPathFn(selected));
     }
-  }, [topSuggestion]);
+  }, [selected]);
 
   useEffect(() => {
     props.onValue?.(searchTerm);
   }, [searchTerm]);
+
+  useEffect(() => {
+    if (!selected || !props.suggestions.includes(selected)) {
+      setSelected(props.suggestions[0]);
+    }
+  }, [selected, props.suggestions]);
 
   return (
     <div>
@@ -42,18 +55,15 @@ export default function SearchBox(props: {
         <form
           className="flex"
           onSubmit={(event) => {
-            event.preventDefault();
-            if (topSuggestion) {
-              router.push(
-                `/stations/[name]`,
-                `/stations/${encodeName(topSuggestion)}`
-              );
+            if (selected) {
+              router.push(props.href, props.asPathFn(selected));
             }
+            event.preventDefault();
           }}
         >
           <label
             className="flex items-center pl-2 opacity-50"
-            htmlFor={inputId}
+            htmlFor={inputRef.current?.id}
           >
             <svg
               width={24}
@@ -80,7 +90,18 @@ export default function SearchBox(props: {
             autoComplete="off"
             spellCheck={false}
             placeholder={props.label}
-            onChange={(event) => setSearchTerm(event.currentTarget.value)}
+            onChange={(event) => {
+              setSearchTerm(event.currentTarget.value);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'ArrowDown') {
+                setSelected((s) => selectNext(s, props.suggestions));
+                event.preventDefault();
+              } else if (event.key === 'ArrowUp') {
+                setSelected((s) => selectPrevious(s, props.suggestions));
+                event.preventDefault();
+              }
+            }}
           />
         </form>
         <button
@@ -123,10 +144,18 @@ export default function SearchBox(props: {
         })}
       >
         <ul className="absolute inset-x-0 top-0 py-2 rounded-lg border bg-white shadow">
-          {props.suggestions.map((name) => (
+          {props.suggestions.map((suggestion) => (
             <li
-              key={name}
-              className="px-2 hover:bg-blue-600 hover:text-white focus-within:shadow-outline flex"
+              key={suggestion}
+              className={clsx('px-2 flex', {
+                'bg-blue-600 text-white': selected === suggestion,
+              })}
+              onMouseEnter={() => {
+                setSelected(suggestion);
+              }}
+              onFocus={() => {
+                setSelected(suggestion);
+              }}
             >
               <div className="flex pl-2 py-2 opacity-50">
                 <svg
@@ -142,12 +171,9 @@ export default function SearchBox(props: {
                   <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
               </div>
-              <Link
-                href="/stations/[name]"
-                as={`/stations/${encodeName(name)}`}
-              >
+              <Link href={props.href} as={props.asPathFn(suggestion)}>
                 <a className="w-full pl-2 focus:outline-none flex items-center">
-                  <span>{name}</span>
+                  <span>{suggestion}</span>
                 </a>
               </Link>
             </li>
