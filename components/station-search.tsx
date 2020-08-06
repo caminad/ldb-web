@@ -1,3 +1,4 @@
+import { encodeName } from 'models/station';
 import Router from 'next/router';
 import { ChangeEventHandler, useState } from 'react';
 import useSWR from 'swr';
@@ -5,7 +6,7 @@ import useSWR from 'swr';
 export default function StationSearch(): JSX.Element {
   const [name, setName] = useState('');
   const { data: names = [] } = useSWR<string[]>(
-    `/api/stations?q=${encodeURIComponent(name)}`
+    `/api/stations?q=${encodeName(name)}`
   );
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -17,10 +18,7 @@ export default function StationSearch(): JSX.Element {
       className="flex justify-center"
       onSubmit={(event) => {
         event.preventDefault();
-        Router.push(
-          `/stations/[name]`,
-          `/stations/${encodeURIComponent(name)}`
-        );
+        Router.push(`/stations/[name]`, `/stations/${encodeName(name)}`);
       }}
     >
       <input

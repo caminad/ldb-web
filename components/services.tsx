@@ -3,6 +3,7 @@ import ScheduleInfo from 'components/schedule-info';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import enGB from 'date-fns/locale/en-GB';
 import castArray from 'lodash/castArray';
+import { encodeName } from 'models/station';
 import useSWR from 'swr';
 
 type OneOrMany<T> = T | T[];
@@ -28,7 +29,7 @@ function useLiveServices(locationName: string) {
     generatedAt: string;
     nrccMessages?: OneOrMany<string>;
     trainServices?: OneOrMany<Service>;
-  }>(`/api/stations/${encodeURIComponent(locationName)}?numRows=20`, {
+  }>(`/api/stations/${encodeName(locationName)}?numRows=20`, {
     refreshInterval: 25000,
   });
 

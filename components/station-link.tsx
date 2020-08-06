@@ -1,3 +1,4 @@
+import { encodeName } from 'models/station';
 import Link from 'next/link';
 
 export default function StationLink(props: {
@@ -17,7 +18,7 @@ export default function StationLink(props: {
     <span>
       <Link
         href="/stations/[name]"
-        as={`/stations/${encodeURIComponent(props.children)}`}
+        as={`/stations/${encodeName(props.children)}`}
       >
         <a className="font-bold hover:underline">{props.children}</a>
       </Link>{' '}

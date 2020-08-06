@@ -2,8 +2,10 @@ import { Client as LiveDepartureBoardClient } from '@kitibyte/ldb/ldb.js';
 import { ArrivalsDepartures } from '@kitibyte/ldb/operations.js';
 import Ajv from 'ajv';
 import stations from 'data/stations.json';
+import castArray from 'lodash/castArray';
 import invert from 'lodash/invert';
 import isObject from 'lodash/isObject';
+import { decodeName } from 'models/station';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 const stationsByCRS = invert(stations);
@@ -19,8 +21,9 @@ const validate = new Ajv({ coerceTypes: true }).compile(
 );
 
 function replaceNameWithCRS(query: { [key: string]: string | string[] }) {
-  if (isStationName(query.name)) {
-    query.crs = stations[query.name];
+  const name = decodeName(castArray(query.name)[0]);
+  if (isStationName(name)) {
+    query.crs = stations[name];
     delete query.name;
     return true;
   }
