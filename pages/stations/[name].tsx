@@ -15,6 +15,7 @@ export default function StationPage() {
     <div className="min-h-screen flex flex-col justify-between items-center p-2">
       <Head>
         <title>Services via {name}</title>
+        <meta name="robots" content="noindex" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
