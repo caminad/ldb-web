@@ -1,34 +1,49 @@
+import clsx from 'clsx';
 import ErrorBoundary from 'components/error-boundary';
-import StationSearch from 'components/station-search';
+import PoweredByNationalRailEnquiries from 'components/logos/powered-by-national-rail-enquiries';
+import SearchBox from 'components/search-box';
+import useStationSuggestions from 'hooks/use-station-suggestions';
+import { encodeName } from 'models/station';
 import Head from 'next/head';
+import React from 'react';
 
 export default function HomePage() {
+  const [searchTerm, setSearchTerm, suggestions] = useStationSuggestions();
+
   return (
-    <div className="h-screen flex flex-col justify-evenly items-center p-2">
+    <div className="min-h-screen flex flex-col justify-between items-center p-2">
       <Head>
         <title>Unofficial National Rail Live Departure Boards</title>
       </Head>
 
-      <main className="flex flex-col justify-center space-y-8">
-        <h1 className="text-4xl text-center font-marker">
+      <main
+        className={clsx('flex flex-col justify-center space-y-8', {
+          'm-auto': searchTerm === '',
+        })}
+      >
+        <h1
+          className={clsx('text-4xl text-center font-marker', {
+            hidden: searchTerm !== '',
+          })}
+        >
           Unofficial National Rail Live Departure Boards
         </h1>
 
-        <ErrorBoundary>
-          <StationSearch />
-        </ErrorBoundary>
+        <div className="flex flex-col justify-center items-center">
+          <ErrorBoundary>
+            <SearchBox
+              label="Station Name"
+              suggestions={suggestions}
+              onValue={setSearchTerm}
+              href="/stations/[name]"
+              asPathFn={(value) => `/stations/${encodeName(value)}`}
+            />
+          </ErrorBoundary>
+        </div>
       </main>
 
-      <footer className="text-xl text-center">
-        <span className="font-casual">Powered by</span>{' '}
-        <a
-          className="font-bold inline-block"
-          href="https://www.nationalrail.co.uk/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          National Rail Enquiries
-        </a>
+      <footer>
+        <PoweredByNationalRailEnquiries />
       </footer>
     </div>
   );

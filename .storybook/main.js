@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const rootDir = path.resolve('.');
 
 module.exports = {
-  stories: [path.resolve(rootDir, 'components/*.stories.tsx')],
+  stories: [path.resolve(rootDir, 'components/**/*.stories.tsx')],
   addons: [
     '@storybook/addon-docs',
     '@storybook/addon-controls',

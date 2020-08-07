@@ -6,8 +6,9 @@ import useSWR from 'swr';
  * Returns a list of station names matching the search term, and a function to update the search term.
  */
 export default function useStationSuggestions(): [
-  string[],
-  Dispatch<SetStateAction<string>>
+  string,
+  Dispatch<SetStateAction<string>>,
+  string[]
 ] {
   const { data: stations = [] } = useSWR(`/api/stations`);
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,5 +22,5 @@ export default function useStationSuggestions(): [
     return results.map((result) => result.target);
   }, [searchTerm, targets]);
 
-  return [suggestions, setSearchTerm];
+  return [searchTerm, setSearchTerm, suggestions];
 }

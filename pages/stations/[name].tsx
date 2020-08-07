@@ -1,4 +1,5 @@
 import ErrorBoundary from 'components/error-boundary';
+import PoweredByNationalRailEnquiries from 'components/logos/powered-by-national-rail-enquiries';
 import Services from 'components/services';
 import { decodeName } from 'models/station';
 import Head from 'next/head';
@@ -11,13 +12,13 @@ export default function StationPage() {
   const name = decodeName(router.query.name);
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col justify-between items-center p-2">
       <Head>
         <title>Services via {name}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="p-4 m-auto container">
+      <main className="p-4 container">
         <div className="flex justify-between items-baseline mb-4">
           <h1 className="text-4xl font-marker leading-none">
             Services via {name}
@@ -32,6 +33,10 @@ export default function StationPage() {
           <Services locationName={name} />
         </ErrorBoundary>
       </main>
-    </>
+
+      <footer>
+        <PoweredByNationalRailEnquiries />
+      </footer>
+    </div>
   );
 }

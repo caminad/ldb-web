@@ -30,7 +30,8 @@ export default function SearchBox(props: {
 
   useEffect(() => {
     if (selected) {
-      router.prefetch(props.href, props.asPathFn(selected));
+      // router is null in e.g. Storybook.
+      router?.prefetch(props.href, props.asPathFn(selected));
     }
   }, [selected]);
 
@@ -139,7 +140,7 @@ export default function SearchBox(props: {
       </div>
 
       <div
-        className={clsx('mt-2 relative', {
+        className={clsx('z-10 mt-2 relative', {
           hidden: props.suggestions.length === 0,
         })}
       >
