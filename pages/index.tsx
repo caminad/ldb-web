@@ -17,12 +17,12 @@ export default function HomePage() {
       </Head>
 
       <main
-        className={clsx('flex flex-col justify-center space-y-8', {
+        className={clsx('flex flex-col justify-center', {
           'm-auto': searchTerm === '',
         })}
       >
         <h1
-          className={clsx('text-4xl text-center font-marker', {
+          className={clsx('text-4xl text-center font-marker pb-4', {
             hidden: searchTerm !== '',
           })}
         >
