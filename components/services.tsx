@@ -4,6 +4,7 @@ import { formatDistanceToNow, parseISO } from 'date-fns';
 import enGB from 'date-fns/locale/en-GB';
 import castArray from 'lodash/castArray';
 import { encodeName } from 'models/station';
+import Head from 'next/head';
 import useSWR from 'swr';
 
 type OneOrMany<T> = T | T[];
@@ -24,7 +25,7 @@ export interface Service {
 }
 
 function useLiveServices(locationName: string) {
-  const { data } = useSWR<{
+  const { data, error } = useSWR<{
     locationName: string;
     generatedAt: string;
     nrccMessages?: OneOrMany<string>;
@@ -33,7 +34,7 @@ function useLiveServices(locationName: string) {
     refreshInterval: 25000,
   });
 
-  return data;
+  return { services: data, error };
 }
 
 function useDistanceToNow(isoDateString?: string) {
@@ -68,8 +69,19 @@ function Messages(props: { value: OneOrMany<string> }) {
 }
 
 export default function Services(props: { locationName: string }): JSX.Element {
-  const services = useLiveServices(props.locationName);
+  const { services, error } = useLiveServices(props.locationName);
   const distanceToNow = useDistanceToNow(services?.generatedAt);
+
+  if (error?.code === 404) {
+    return (
+      <div className="font-marker">
+        <Head>
+          <title>Not Found</title>
+        </Head>
+        Not Found
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
