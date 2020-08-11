@@ -1,31 +1,27 @@
 import clsx from 'clsx';
 
 function Label(props: { children: string | undefined }) {
-  return <dt className="opacity-50 font-light text-xs">{props.children}</dt>;
+  return (
+    <dt className="opacity-50 tracking-tighter text-xs">{props.children}</dt>
+  );
 }
 
-function ScheduledTime(props: {
-  children: string | undefined;
-  onTime: boolean;
-}) {
+function ScheduledTime(props: { children: string; onTime: boolean }) {
   return (
-    <dd
-      className={clsx({
-        'opacity-50 line-through': props.children && !props.onTime,
-        'border-b h-0 w-1/2 m-auto': !props.children,
-      })}
-    >
+    <dd className={clsx({ 'opacity-50 line-through': !props.onTime })}>
       {props.children}
     </dd>
   );
 }
 
 function EstimatedTime(props: { children: string | undefined }) {
+  const isFormattedTime = props.children?.includes(':');
   return (
     <dd
-      className={clsx('font-marker col-start-2', {
-        'col-start-2': props.children?.includes(':'),
-        'sr-only': props.children === 'On time',
+      className={clsx({
+        'col-start-2': isFormattedTime,
+        'col-span-2 font-bold': !isFormattedTime,
+        hidden: props.children === 'On time',
       })}
     >
       {props.children}
@@ -37,11 +33,11 @@ function Platform(props: { children: string | undefined }) {
   return (
     <dd
       className={clsx({
-        'text-2xl font-casual': props.children,
-        'border-b h-0 w-1/2 m-auto': !props.children,
+        'opacity-25': !props.children,
+        'font-bold': props.children,
       })}
     >
-      {props.children}
+      {props.children || '—'}
     </dd>
   );
 }
@@ -53,6 +49,7 @@ export default function ScheduleInfo(props: {
   platform?: string;
   std?: string;
   etd?: string;
+  platformAvailable?: boolean;
 }) {
   return (
     <dl
@@ -61,20 +58,32 @@ export default function ScheduleInfo(props: {
         props.className
       )}
     >
-      <Label>arrives</Label>
-      <ScheduledTime onTime={props.eta === 'On time'}>
-        {props.sta}
-      </ScheduledTime>
-      <EstimatedTime>{props.eta}</EstimatedTime>
+      {props.sta && (
+        <>
+          <Label>arrives</Label>
+          <ScheduledTime onTime={props.eta === 'On time'}>
+            {props.sta}
+          </ScheduledTime>
+          <EstimatedTime>{props.eta}</EstimatedTime>
+        </>
+      )}
 
-      <Label>platform</Label>
-      <Platform>{props.platform}</Platform>
+      {props.platformAvailable && (
+        <>
+          <Label>platform</Label>
+          <Platform>{props.platform}</Platform>
+        </>
+      )}
 
-      <Label>departs</Label>
-      <ScheduledTime onTime={props.etd === 'On time'}>
-        {props.std}
-      </ScheduledTime>
-      <EstimatedTime>{props.etd}</EstimatedTime>
+      {props.std && (
+        <>
+          <Label>departs</Label>
+          <ScheduledTime onTime={props.etd === 'On time'}>
+            {props.std}
+          </ScheduledTime>
+          <EstimatedTime>{props.etd}</EstimatedTime>
+        </>
+      )}
     </dl>
   );
 }

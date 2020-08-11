@@ -29,6 +29,7 @@ function useLiveServices(locationName: string) {
     locationName: string;
     generatedAt: string;
     nrccMessages?: OneOrMany<string>;
+    platformAvailable?: boolean;
     trainServices?: OneOrMany<Service>;
   }>(`/api/stations/${encodeName(locationName)}?numRows=20`, {
     refreshInterval: 25000,
@@ -94,9 +95,13 @@ export default function Services(props: { locationName: string }): JSX.Element {
           castArray(services.trainServices).map((service) => (
             <li
               key={service.serviceID}
-              className="py-2 border-t flex items-stretch space-x-4"
+              className="py-2 border-t flex items-start space-x-4"
             >
-              <ScheduleInfo className="w-40" {...service} />
+              <ScheduleInfo
+                className="w-40"
+                {...service}
+                platformAvailable={services.platformAvailable}
+              />
               <RouteInfo
                 className="w-full"
                 currentLocationName={props.locationName}
