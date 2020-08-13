@@ -25,16 +25,16 @@
     "tailwindcss": "^1.6.0"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^6.0.0-rc.27",
-    "@storybook/addon-controls": "^6.0.0-rc.27",
-    "@storybook/addon-docs": "^6.0.0-rc.27",
-    "@storybook/react": "^6.0.0-rc.27",
+    "@storybook/addon-actions": "^6.0.5",
+    "@storybook/addon-controls": "^6.0.5",
+    "@storybook/addon-docs": "^6.0.5",
+    "@storybook/react": "^6.0.5",
     "@types/jest": "^26.0.9",
-    "@types/lodash": "^4.14.158",
-    "@types/node": "^12.12.53",
-    "@types/react": "^16.9.44",
-    "jest": "^26.2.2",
-    "ts-jest": "^26.1.4",
-    "typescript": "^4.1.0-dev.20200806"
+    "@types/lodash": "^4.14.159",
+    "@types/node": "^12.12.54",
+    "@types/react": "^16.9.46",
+    "jest": "^26.4.0",
+    "ts-jest": "^26.2.0",
+    "typescript": "^4.0.1-rc"
   }
 }
