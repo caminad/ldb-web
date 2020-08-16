@@ -31,7 +31,7 @@ export default function StationPage() {
           </Link>
         </div>
         <ErrorBoundary>
-          <Services locationName={name} />
+          <Services key={name} locationName={name} />
         </ErrorBoundary>
       </main>
 

@@ -5,7 +5,8 @@ import enGB from 'date-fns/locale/en-GB';
 import castArray from 'lodash/castArray';
 import { encodeName } from 'models/station';
 import Head from 'next/head';
-import useSWR from 'swr';
+import { useCallback, useState } from 'react';
+import useSWR, { mutate } from 'swr';
 
 type OneOrMany<T> = T | T[];
 
@@ -24,7 +25,11 @@ export interface Service {
   cancelReason?: string;
 }
 
+const PAGE_SIZE = 10;
+
 function useLiveServices(locationName: string) {
+  const [limit, setLimit] = useState(PAGE_SIZE);
+
   const { data, error } = useSWR<{
     locationName: string;
     generatedAt: string;
@@ -32,11 +37,33 @@ function useLiveServices(locationName: string) {
     platformAvailable?: boolean;
     trainServices?: OneOrMany<Service>;
     busServices?: OneOrMany<Service>;
-  }>(`/api/stations/${encodeName(locationName)}?numRows=20`, {
-    refreshInterval: 25000,
-  });
+  }>(
+    locationName
+      ? `/api/stations/${encodeName(locationName)}?limit=${limit}`
+      : null,
+    {
+      refreshInterval: 25000,
+    }
+  );
 
-  return { services: data, error };
+  const allServices = ([] as Service[]).concat(
+    data?.busServices ?? [],
+    data?.trainServices ?? []
+  );
+
+  const loadMore = useCallback(async () => {
+    const nextLimit = limit + PAGE_SIZE;
+    // Populate the next page with the current results to preserve visible items.
+    await mutate(
+      `/api/stations/${encodeName(locationName)}?limit=${nextLimit}`,
+      data
+    );
+    setLimit(nextLimit);
+  }, [limit, locationName, data]);
+
+  const canLoadMore = Boolean(data) && allServices.length === limit;
+
+  return { data, error, allServices, loadMore, canLoadMore };
 }
 
 function useDistanceToNow(isoDateString?: string) {
@@ -71,8 +98,11 @@ function Messages(props: { value: OneOrMany<string> }) {
 }
 
 export default function Services(props: { locationName: string }): JSX.Element {
-  const { services, error } = useLiveServices(props.locationName);
-  const distanceToNow = useDistanceToNow(services?.generatedAt);
+  const { data, error, allServices, canLoadMore, loadMore } = useLiveServices(
+    props.locationName
+  );
+
+  const distanceToNow = useDistanceToNow(data?.generatedAt);
 
   if (error?.code === 404) {
     return (
@@ -90,29 +120,36 @@ export default function Services(props: { locationName: string }): JSX.Element {
       <span className="font-marker">
         {distanceToNow ? `Updated ${distanceToNow}` : `Loading...`}
       </span>
-      {services?.nrccMessages && <Messages value={services.nrccMessages} />}
+      {data?.nrccMessages && <Messages value={data.nrccMessages} />}
       <ul className="flex flex-col">
-        {services &&
-          ([] as Service[])
-            .concat(services.busServices ?? [], services.trainServices ?? [])
-            .map((service) => (
-              <li
-                key={service.serviceID}
-                className="py-2 border-t flex items-start space-x-4"
-              >
-                <ScheduleInfo
-                  className="w-40"
-                  {...service}
-                  platformAvailable={services.platformAvailable}
-                />
-                <RouteInfo
-                  className="w-full"
-                  currentLocationName={props.locationName}
-                  {...service}
-                />
-              </li>
-            ))}
+        {allServices.map((service) => (
+          <li
+            key={service.serviceID}
+            className="py-2 border-t flex items-start space-x-4"
+          >
+            <ScheduleInfo
+              className="w-40"
+              {...service}
+              platformAvailable={data?.platformAvailable}
+            />
+            <RouteInfo
+              className="w-full"
+              currentLocationName={props.locationName}
+              {...service}
+            />
+          </li>
+        ))}
       </ul>
+      <div className="h-12">
+        {canLoadMore && (
+          <button
+            className="w-full h-full rounded border hover:border-blue-600"
+            onClick={loadMore}
+          >
+            Show more
+          </button>
+        )}
+      </div>
     </div>
   );
 }
