@@ -31,6 +31,7 @@ function useLiveServices(locationName: string) {
     nrccMessages?: OneOrMany<string>;
     platformAvailable?: boolean;
     trainServices?: OneOrMany<Service>;
+    busServices?: OneOrMany<Service>;
   }>(`/api/stations/${encodeName(locationName)}?numRows=20`, {
     refreshInterval: 25000,
   });
@@ -91,24 +92,26 @@ export default function Services(props: { locationName: string }): JSX.Element {
       </span>
       {services?.nrccMessages && <Messages value={services.nrccMessages} />}
       <ul className="flex flex-col">
-        {services?.trainServices &&
-          castArray(services.trainServices).map((service) => (
-            <li
-              key={service.serviceID}
-              className="py-2 border-t flex items-start space-x-4"
-            >
-              <ScheduleInfo
-                className="w-40"
-                {...service}
-                platformAvailable={services.platformAvailable}
-              />
-              <RouteInfo
-                className="w-full"
-                currentLocationName={props.locationName}
-                {...service}
-              />
-            </li>
-          ))}
+        {services &&
+          ([] as Service[])
+            .concat(services.busServices ?? [], services.trainServices ?? [])
+            .map((service) => (
+              <li
+                key={service.serviceID}
+                className="py-2 border-t flex items-start space-x-4"
+              >
+                <ScheduleInfo
+                  className="w-40"
+                  {...service}
+                  platformAvailable={services.platformAvailable}
+                />
+                <RouteInfo
+                  className="w-full"
+                  currentLocationName={props.locationName}
+                  {...service}
+                />
+              </li>
+            ))}
       </ul>
     </div>
   );
