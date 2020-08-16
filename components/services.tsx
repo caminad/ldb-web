@@ -1,6 +1,6 @@
 import RouteInfo from 'components/route-info';
 import ScheduleInfo from 'components/schedule-info';
-import { formatDistanceToNow, parseISO } from 'date-fns';
+import { differenceInSeconds, formatDistanceToNow, parseISO } from 'date-fns';
 import enGB from 'date-fns/locale/en-GB';
 import castArray from 'lodash/castArray';
 import { encodeName } from 'models/station';
@@ -25,19 +25,39 @@ export interface Service {
   cancelReason?: string;
 }
 
+interface Station {
+  locationName: string;
+  generatedAt: string;
+  nrccMessages?: OneOrMany<string>;
+  platformAvailable?: boolean;
+  trainServices?: OneOrMany<Service>;
+  busServices?: OneOrMany<Service>;
+}
+
 const PAGE_SIZE = 10;
+
+function isRecent(cached: Station) {
+  return differenceInSeconds(new Date(), parseISO(cached.generatedAt)) < 60;
+}
+
+export function preloadStationData(name: string) {
+  const url = `/api/stations/${encodeName(name)}?limit=10`;
+  return mutate(
+    url,
+    (cached?: Station) => {
+      if (cached && isRecent(cached)) {
+        return cached;
+      }
+      return fetch(url).then((res) => res.json());
+    },
+    false // no revalidate
+  );
+}
 
 function useLiveServices(locationName: string) {
   const [limit, setLimit] = useState(PAGE_SIZE);
 
-  const { data, error } = useSWR<{
-    locationName: string;
-    generatedAt: string;
-    nrccMessages?: OneOrMany<string>;
-    platformAvailable?: boolean;
-    trainServices?: OneOrMany<Service>;
-    busServices?: OneOrMany<Service>;
-  }>(
+  const { data, error } = useSWR<Station>(
     locationName
       ? `/api/stations/${encodeName(locationName)}?limit=${limit}`
       : null,

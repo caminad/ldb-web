@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import { preloadStationData } from './services';
 
 const inputId = 'search-box-input'; // Assumes that this component is only rendered once per page.
 
@@ -30,8 +31,7 @@ export default function SearchBox(props: {
 
   useEffect(() => {
     if (selected) {
-      // router is null in e.g. Storybook.
-      router?.prefetch(props.href, props.asPathFn(selected));
+      preloadStationData(selected);
     }
   }, [selected]);
 
