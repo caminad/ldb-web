@@ -1,11 +1,15 @@
-import { Client as LiveDepartureBoardClient } from '@kitibyte/ldb/ldb.js';
 import stations from 'data/stations.json';
+import { Client as LiveDepartureBoardClient } from 'ldb/ldb';
 import invert from 'lodash/invert';
 import isObject from 'lodash/isObject';
 import { decodeName } from 'models/station';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 const stationsByCRS = invert(stations);
+
+if (!process.env.LDB_TOKEN) {
+  throw new Error('LDB_TOKEN required');
+}
 
 const client = new LiveDepartureBoardClient({
   accessToken: process.env.LDB_TOKEN,
