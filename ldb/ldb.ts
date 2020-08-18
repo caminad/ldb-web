@@ -1,17 +1,13 @@
-const Ajv = require('ajv');
-const { decodeXML, decodeHTML } = require('entities');
-const { resolve } = require('url');
-const operations = require('./operations.js');
-const { SoapFault, SoapRequest } = require('./soap.js');
+import Ajv from 'ajv';
+import { decodeHTML, decodeXML } from 'entities';
+import { resolve } from 'url';
+import operations from './operations';
+import { SoapFault, SoapRequest } from './soap';
 
-class Client {
+export class Client {
   static origin = 'https://realtime.nationalrail.co.uk';
 
-  /**
-   * @param {unknown} obj
-   * @returns {obj is keyof typeof operations}
-   */
-  static isOperationName(obj) {
+  static isOperationName(obj: unknown): obj is keyof typeof operations {
     return typeof obj === 'string' && obj in operations;
   }
 
@@ -27,19 +23,16 @@ class Client {
     strictDefaults: true,
   });
 
-  /**
-   * @param {object} options
-   * @param {string} options.accessToken
-   */
-  constructor({ accessToken }) {
-    this.accessToken = accessToken;
+  accessToken: string;
+
+  constructor(options: { accessToken: string }) {
+    this.accessToken = options.accessToken;
   }
 
-  /**
-   * @param {keyof typeof operations} operation
-   * @param {Record<string, unknown>} params
-   */
-  async request(operation, params) {
+  async request(
+    operation: keyof typeof operations,
+    params: Record<string, unknown>
+  ) {
     const { requestName, requestSchema } = operations[operation];
 
     const validateParams = this.ajv.compile(requestSchema);
@@ -68,12 +61,9 @@ class Client {
 
 /**
  * Adapted from https://github.com/douglascrockford/JSON-js/blob/master/json2.js
- * @param {{ [key: string]: unknown }} holder
- * @param {string} key
  */
-function walk(holder, key) {
-  /** @type {any} */
-  let value = holder[key];
+function walk(holder: { [key: string]: unknown }, key: string) {
+  let value: any = holder[key];
 
   if (value && typeof value === 'object') {
     for (const childKey of Object.keys(value)) {
@@ -120,5 +110,3 @@ function walk(holder, key) {
     return value;
   }
 }
-
-module.exports = { Client };
