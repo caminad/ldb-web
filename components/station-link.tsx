@@ -1,6 +1,5 @@
 import { encodeName } from 'models/station';
 import Link from 'next/link';
-import { preloadStationData } from './services';
 
 export default function StationLink(props: {
   children: string;
@@ -16,10 +15,7 @@ export default function StationLink(props: {
   }
 
   return (
-    <span
-      onMouseEnter={() => preloadStationData(props.children)}
-      onFocus={() => preloadStationData(props.children)}
-    >
+    <span>
       <Link
         href="/stations/[name]"
         as={`/stations/${encodeName(props.children)}`}

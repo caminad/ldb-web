@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { preloadStationData } from './services';
 
 const inputId = 'search-box-input'; // Assumes that this component is only rendered once per page.
 
@@ -28,12 +27,6 @@ export default function SearchBox(props: {
   const [selected, setSelected] = useState<string | undefined>(
     props.suggestions[0]
   );
-
-  useEffect(() => {
-    if (selected) {
-      preloadStationData(selected);
-    }
-  }, [selected]);
 
   useEffect(() => {
     props.onValue?.(searchTerm);
