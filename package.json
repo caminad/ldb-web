@@ -12,10 +12,11 @@
   "dependencies": {
     "@next/bundle-analyzer": "^9.5.2",
     "@tailwindcss/typography": "^0.2.0",
-    "ajv": "^6.12.3",
     "clsx": "^1.1.1",
     "date-fns": "^2.15.0",
+    "fp-ts": "^2.8.1",
     "fuzzysort": "^1.1.4",
+    "io-ts": "^2.2.9",
     "lodash": "^4.17.20",
     "next": "^9.5.2",
     "react": "16.13.1",

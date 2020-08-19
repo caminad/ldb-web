@@ -1,5 +1,5 @@
 import stations from 'data/stations.json';
-import { Client as LiveDepartureBoardClient } from 'ldb/ldb';
+import LiveDepartureBoardClient from 'ldb/client';
 import invert from 'lodash/invert';
 import isObject from 'lodash/isObject';
 import { decodeName } from 'models/station';
@@ -10,10 +10,7 @@ const stationsByCRS = invert(stations);
 if (!process.env.LDB_TOKEN) {
   throw new Error('LDB_TOKEN required');
 }
-
-const client = new LiveDepartureBoardClient({
-  accessToken: process.env.LDB_TOKEN,
-});
+const client = new LiveDepartureBoardClient(process.env.LDB_TOKEN);
 
 function isLocationName(value: string): value is keyof typeof stations {
   return stations.hasOwnProperty(value);

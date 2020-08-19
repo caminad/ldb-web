@@ -1,62 +1,32 @@
-import Ajv from 'ajv';
 import { decodeHTML, decodeXML } from 'entities';
-import { resolve } from 'url';
-import operations from './operations';
+import { Either, isLeft } from 'fp-ts/lib/Either';
+import { Errors } from 'io-ts';
+import * as operations from './operations';
 import { SoapFault, SoapRequest } from './soap';
 
-export class Client {
-  static origin = 'https://realtime.nationalrail.co.uk';
+export default class Client {
+  endpoint = 'https://realtime.nationalrail.co.uk/OpenLDBWS/ldb11.asmx';
 
-  static isOperationName(obj: unknown): obj is keyof typeof operations {
-    return typeof obj === 'string' && obj in operations;
-  }
-
-  static operationNames() {
-    return Object.keys(operations);
-  }
-
-  endpoint = resolve(Client.origin, '/OpenLDBWS/ldb11.asmx');
-
-  ajv = new Ajv({
-    removeAdditional: true,
-    useDefaults: true,
-    strictDefaults: true,
-  });
-
-  accessToken: string;
-
-  constructor(options: { accessToken: string }) {
-    this.accessToken = options.accessToken;
-  }
+  constructor(private accessToken: string) {}
 
   async request(
     operation: keyof typeof operations,
     params: Record<string, unknown>
   ) {
-    const { requestName, requestSchema } = operations[operation];
-
-    const validateParams = this.ajv.compile(requestSchema);
-    if (!validateParams(params)) {
-      if (validateParams.errors) {
-        const { dataPath, message } = validateParams.errors[0];
-        throw new TypeError(`params${dataPath} ${message}`);
-      } else {
-        throw new TypeError(`params validation failed`);
-      }
-    }
-
     const response = await new SoapRequest(this.endpoint, {
-      header: {
-        AccessToken: { TokenValue: this.accessToken },
-      },
-      body: {
-        '@xmlns': 'http://thalesgroup.com/RTTI/2017-10-01/ldb/',
-        [requestName]: params,
-      },
+      header: { AccessToken: { TokenValue: this.accessToken } },
+      body: unwrap(operations[operation](params)),
     }).execute();
 
     return walk({ '': await response.xml() }, '');
   }
+}
+
+function unwrap<A>(e: Either<Errors, A>) {
+  if (isLeft(e)) {
+    throw new Error(e.left.join(', '));
+  }
+  return e.right;
 }
 
 /**
