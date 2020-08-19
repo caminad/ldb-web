@@ -76,7 +76,7 @@ export default function SearchBox(props: {
             ref={inputRef}
             id={inputId}
             value={searchTerm}
-            type="search"
+            type="text"
             autoCapitalize="off"
             autoCorrect="off"
             autoComplete="off"
