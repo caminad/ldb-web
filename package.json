@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@storybook/addon-actions": "^6.0.13",
-    "@storybook/addon-controls": "^6.0.7",
+    "@storybook/addon-controls": "^6.0.13",
     "@storybook/addon-docs": "^6.0.13",
     "@storybook/react": "^6.0.7",
     "@types/jest": "^26.0.10",
