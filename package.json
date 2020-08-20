@@ -22,7 +22,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "swr": "^0.3.1",
-    "tailwindcss": "^1.7.2",
+    "tailwindcss": "^1.7.3",
     "xmlbuilder2": "^2.3.1"
   },
   "devDependencies": {
