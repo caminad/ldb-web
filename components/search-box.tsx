@@ -1,9 +1,10 @@
 // Icons from https://heroicons.dev/
 
 import clsx from 'clsx';
+import useStationSuggestions from 'hooks/use-station-suggestions';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 const inputId = 'search-box-input'; // Assumes that this component is only rendered once per page.
 
@@ -15,40 +16,40 @@ function selectPrevious<T>(x: T | undefined, xs: T[]): T | undefined {
 }
 
 export default function SearchBox(props: {
+  className?: string;
   label: string;
-  suggestions: string[];
+  initialValue: string;
   href: string;
   asPathFn: (value: string) => string;
-  onValue?: (value: string) => void;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }): JSX.Element {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selected, setSelected] = useState<string | undefined>(
-    props.suggestions[0]
-  );
+  const [searchTerm, setSearchTerm] = useState(props.initialValue);
+  const suggestions = useStationSuggestions(searchTerm);
+  const [selected, setSelected] = useState<string | undefined>(suggestions[0]);
 
-  const { onValue } = props;
-  useEffect(() => {
-    if (onValue) {
-      onValue(searchTerm);
-    }
-  }, [onValue, searchTerm]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
-    if (!selected || !props.suggestions.includes(selected)) {
-      setSelected(props.suggestions[0]);
+    if (!selected || !suggestions.includes(selected)) {
+      setSelected(suggestions[0]);
     }
-  }, [selected, props.suggestions]);
+  }, [selected, suggestions]);
 
   return (
-    <div>
+    <div
+      className={props.className}
+      onFocus={() => setShowSuggestions(true)}
+      onBlur={(event) => {
+        setShowSuggestions(
+          event.currentTarget.contains(event.relatedTarget as Node | null)
+        );
+      }}
+    >
       <div className="relative">
         <form
-          className={clsx(
-            'relative border-2 focus-within:shadow-outline rounded-lg p-2 bg-white',
-            { 'border-blue-600': searchTerm !== '' }
-          )}
+          className="relative border-2 focus-within:border-blue-600 rounded-lg p-2 bg-white"
           onSubmit={(event) => {
             if (selected) {
               router.push(props.href, props.asPathFn(selected));
@@ -86,14 +87,15 @@ export default function SearchBox(props: {
             spellCheck={false}
             placeholder={props.label}
             onChange={(event) => {
+              props.onChange?.(event);
               setSearchTerm(event.currentTarget.value);
             }}
             onKeyDown={(event) => {
               if (event.key === 'ArrowDown') {
-                setSelected((s) => selectNext(s, props.suggestions));
+                setSelected((s) => selectNext(s, suggestions));
                 event.preventDefault();
               } else if (event.key === 'ArrowUp') {
-                setSelected((s) => selectPrevious(s, props.suggestions));
+                setSelected((s) => selectPrevious(s, suggestions));
                 event.preventDefault();
               }
             }}
@@ -122,15 +124,12 @@ export default function SearchBox(props: {
             </svg>
           </button>
         )}
-      </div>
 
-      <div
-        className={clsx('z-10 mt-2 relative', {
-          hidden: props.suggestions.length === 0,
-        })}
-      >
-        <ul className="absolute inset-x-0 top-0 py-2 rounded-lg border bg-white shadow">
-          {props.suggestions.map((suggestion) => (
+        <ul
+          className="absolute z-10 inset-x-0 mt-2 py-2 rounded-lg border bg-white shadow"
+          hidden={!showSuggestions || suggestions.length === 0}
+        >
+          {suggestions.map((suggestion) => (
             <li
               key={suggestion}
               className={clsx('px-2 flex', {

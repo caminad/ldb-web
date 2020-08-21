@@ -85,7 +85,7 @@ function useDistanceToNow(isoDateString?: string) {
 function Messages(props: { value: OneOrMany<string> }) {
   return (
     <details className="rounded border focus-within:shadow-outline transition-shadow duration-75">
-      <summary className="p-2 cursor-pointer font-marker rounded focus:outline-none">
+      <summary className="p-2 cursor-pointer font-bold rounded focus:outline-none">
         Messages
       </summary>
       <ul className="p-2 font-casual space-y-2 border-t">
@@ -119,7 +119,7 @@ export default function Services(props: { locationName: string }): JSX.Element {
 
   return (
     <div className="space-y-4">
-      <span className="font-marker">
+      <span className="font-casual">
         {distanceToNow ? `Updated ${distanceToNow}` : `Loading...`}
       </span>
       {data?.nrccMessages && <Messages value={data.nrccMessages} />}

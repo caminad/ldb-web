@@ -2,13 +2,12 @@ import clsx from 'clsx';
 import ErrorBoundary from 'components/error-boundary';
 import PoweredByNationalRailEnquiries from 'components/logos/powered-by-national-rail-enquiries';
 import SearchBox from 'components/search-box';
-import useStationSuggestions from 'hooks/use-station-suggestions';
 import { encodeName } from 'models/station';
 import Head from 'next/head';
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function HomePage() {
-  const [searchTerm, setSearchTerm, suggestions] = useStationSuggestions();
+  const [searchTerm, setSearchTerm] = useState('');
 
   return (
     <div className="min-h-screen flex flex-col justify-between items-center p-2">
@@ -33,10 +32,12 @@ export default function HomePage() {
           <ErrorBoundary>
             <SearchBox
               label="Station Name"
-              suggestions={suggestions}
-              onValue={setSearchTerm}
+              initialValue=""
               href="/stations/[name]"
               asPathFn={(value) => `/stations/${encodeName(value)}`}
+              onChange={(event) => {
+                setSearchTerm(event.currentTarget.value);
+              }}
             />
           </ErrorBoundary>
         </div>

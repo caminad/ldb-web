@@ -1,7 +1,8 @@
 import ErrorBoundary from 'components/error-boundary';
 import PoweredByNationalRailEnquiries from 'components/logos/powered-by-national-rail-enquiries';
+import SearchBox from 'components/search-box';
 import Services from 'components/services';
-import { decodeName } from 'models/station';
+import { decodeName, encodeName } from 'models/station';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -20,15 +21,35 @@ export default function StationPage() {
       </Head>
 
       <main className="p-4 container">
-        <div className="flex justify-between items-baseline mb-4">
-          <h1 className="text-4xl font-marker leading-none">
-            Services via {name}
-          </h1>
+        <div className="flex items-stretch mb-2">
           <Link href="/">
-            <a className="px-4 text-4xl opacity-50 font-marker" title="Home">
-              ×
+            <a className="rounded px-2 flex items-center">
+              <svg
+                className="w-8 h-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+              <span className="sr-only">Home</span>
             </a>
           </Link>
+          <ErrorBoundary>
+            <SearchBox
+              className="w-full"
+              key={name}
+              label="Station Name"
+              initialValue={name}
+              href="/stations/[name]"
+              asPathFn={(value) => `/stations/${encodeName(value)}`}
+            />
+          </ErrorBoundary>
         </div>
         <ErrorBoundary>
           <Services key={name} locationName={name} />

@@ -7,10 +7,5 @@ export default {
 };
 
 export const Basic = (args: any) => (
-  <SearchBox
-    suggestions={['Glasgow Queen Street', 'Heathrow Terminal 5', 'The Moon']}
-    href={location.href}
-    asPathFn={() => location.href}
-    {...args}
-  />
+  <SearchBox href={location.href} asPathFn={() => location.href} {...args} />
 );
