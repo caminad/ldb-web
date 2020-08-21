@@ -28,9 +28,12 @@ export default function SearchBox(props: {
     props.suggestions[0]
   );
 
+  const { onValue } = props;
   useEffect(() => {
-    props.onValue?.(searchTerm);
-  }, [searchTerm]);
+    if (onValue) {
+      onValue(searchTerm);
+    }
+  }, [onValue, searchTerm]);
 
   useEffect(() => {
     if (!selected || !props.suggestions.includes(selected)) {

@@ -12,9 +12,9 @@ if (!process.env.LDB_TOKEN) {
 }
 const client = new LiveDepartureBoardClient(process.env.LDB_TOKEN);
 
-function isLocationName(value: string): value is keyof typeof stations {
-  return stations.hasOwnProperty(value);
-}
+const isLocationName = Object.prototype.hasOwnProperty.bind(stations) as {
+  (v: string): v is keyof typeof stations;
+};
 
 function setLocationNamesFromCRS(obj: any): any {
   Object.values(obj).filter(isObject).forEach(setLocationNamesFromCRS);

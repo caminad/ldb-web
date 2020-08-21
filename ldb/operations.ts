@@ -13,7 +13,6 @@ const CRS = t.brand(
   (s): s is t.Branded<string, CRSBrand> => CRSCodes.has(s),
   'CRS'
 );
-const CRS_ = t.keyof(stations);
 type CRS = t.Branded<string, CRSBrand>;
 
 interface LimitBrand {
