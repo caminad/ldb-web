@@ -271,10 +271,12 @@ export default function Services(props: { locationName: string }): JSX.Element {
                 key={service.serviceID + '-arrival'}
               >
                 <svg
-                  fill="none"
+                  className="absolute left-0 w-6 h-6 text-pink-500"
+                  width="24"
+                  height="24"
                   viewBox="0 0 24 24"
+                  fill="none"
                   stroke="currentColor"
-                  className="login absolute left-0 w-6 h-6 text-pink-500"
                 >
                   <title>Arrival</title>
                   <path
@@ -301,10 +303,12 @@ export default function Services(props: { locationName: string }): JSX.Element {
                 key={service.serviceID + '-departure'}
               >
                 <svg
-                  fill="none"
+                  className="absolute left-0 w-6 h-6 text-indigo-500"
+                  width="24"
+                  height="24"
                   viewBox="0 0 24 24"
+                  fill="none"
                   stroke="currentColor"
-                  className="logout absolute left-0 w-6 h-6 text-indigo-500"
                 >
                   <title>Departure</title>
                   <path

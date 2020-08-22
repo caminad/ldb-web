@@ -27,10 +27,12 @@ export default function StationPage() {
               title="Home"
             >
               <svg
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
                 className="home w-6 h-6"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
               >
                 <path
                   strokeLinecap="round"

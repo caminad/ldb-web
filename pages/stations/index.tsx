@@ -27,10 +27,12 @@ export default function StationsPage() {
           onClick={() => router.back()}
         >
           <svg
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
             className="chevron-left w-6 h-6"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
           >
             <path
               strokeLinecap="round"
