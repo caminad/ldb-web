@@ -4,6 +4,11 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+const nameCollator = Intl.Collator('en-GB', {
+  sensitivity: 'base',
+  usage: 'search',
+});
+
 export default function StationsPage() {
   const router = useRouter();
   const searchTerm = decodeName(router.query.search);
@@ -38,8 +43,8 @@ export default function StationsPage() {
         </button>
 
         <input
-          className="w-full h-12 appearance-none border border-b-2 p-2 rounded shadow focus:outline-none focus:border-blue-500"
-          type="text"
+          className="w-full h-12 appearance-none border border-b-2 border-current p-2 rounded shadow placeholder-current focus:outline-none focus:text-blue-500"
+          type="search"
           autoFocus={true}
           value={searchTerm}
           onChange={(e) => {
@@ -51,6 +56,20 @@ export default function StationsPage() {
           autoCorrect="off"
           autoComplete="off"
           spellCheck="false"
+          onKeyUp={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              for (const suggestedName of suggestedNames) {
+                if (nameCollator.compare(searchTerm, suggestedName) === 0) {
+                  router.push(
+                    '/stations/[name]',
+                    `/stations/${encodeName(suggestedName)}`
+                  );
+                  return;
+                }
+              }
+            }
+          }}
         />
 
         <ul className="mt-2 flex flex-col overflow-auto">
