@@ -20,23 +20,8 @@ export default function StationsPage() {
         <title>Search Stations</title>
       </Head>
 
-      <form
-        className="flex flex-col relative max-w-screen-sm m-auto pl-10"
-        onSubmit={(e) => {
-          e.preventDefault();
-          const matchingName = suggestedNames.find((suggestedName) => {
-            return nameCollator.compare(searchTerm, suggestedName) === 0;
-          });
-          if (matchingName) {
-            router.push(
-              '/stations/[name]',
-              `/stations/${encodeName(matchingName)}`
-            );
-          }
-        }}
-      >
+      <div className="flex flex-col relative max-w-screen-sm m-auto pl-10">
         <button
-          key="search-button"
           className="absolute top-0 left-0 h-12 p-2 flex items-center focus:text-blue-500 hover:text-blue-500"
           title="Back"
           onClick={() => router.back()}
@@ -57,22 +42,36 @@ export default function StationsPage() {
           <span className="sr-only">Back</span>
         </button>
 
-        <input
-          key="search-input"
-          className="w-full h-12 appearance-none border border-b-2 border-current p-2 rounded shadow placeholder-current focus:outline-none focus:text-blue-500"
-          type="search"
-          autoFocus={true}
-          value={searchTerm}
-          onChange={(e) => {
-            const newSearchTerm = e.currentTarget.value;
-            const query = newSearchTerm ? { search: newSearchTerm } : null;
-            router.replace({ query }, undefined, { shallow: true });
+        <form
+          onSubmitCapture={(e) => {
+            e.preventDefault();
+            const matchingName = suggestedNames.find((suggestedName) => {
+              return nameCollator.compare(searchTerm, suggestedName) === 0;
+            });
+            if (matchingName) {
+              router.push(
+                '/stations/[name]',
+                `/stations/${encodeName(matchingName)}`
+              );
+            }
           }}
-          placeholder="Search Stations"
-          autoCorrect="off"
-          autoComplete="off"
-          spellCheck="false"
-        />
+        >
+          <input
+            className="w-full h-12 appearance-none border border-b-2 border-current p-2 rounded shadow placeholder-current focus:outline-none focus:text-blue-500"
+            type="search"
+            autoFocus={true}
+            value={searchTerm}
+            onChange={(e) => {
+              const newSearchTerm = e.currentTarget.value;
+              const query = newSearchTerm ? { search: newSearchTerm } : null;
+              router.replace({ query }, undefined, { shallow: true });
+            }}
+            placeholder="Search Stations"
+            autoCorrect="off"
+            autoComplete="off"
+            spellCheck="false"
+          />
+        </form>
 
         <ul className="mt-2 flex flex-col overflow-auto">
           {suggestedNames.map((suggestedName) => (
@@ -88,7 +87,7 @@ export default function StationsPage() {
             </li>
           ))}
         </ul>
-      </form>
+      </div>
     </main>
   );
 }
