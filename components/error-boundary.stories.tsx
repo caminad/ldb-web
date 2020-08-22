@@ -8,7 +8,7 @@ export default {
 
 function ExampleComponent() {
   return (
-    <p className="border rounded p-4 font-marker">
+    <p className="border rounded p-4 font-bold">
       This component does not throw.
     </p>
   );
