@@ -16,7 +16,7 @@ export default function PoweredByNationalRailEnquiries() {
       rel="noopener noreferrer"
     >
       <div className="grid items-center gap-x-2 leading-none">
-        <div className="col-start-2 font-casual opacity-75">powered by</div>
+        <div className="col-start-2 opacity-75">powered by</div>
         <svg
           className="text-nre-corporate-blue"
           width="36"

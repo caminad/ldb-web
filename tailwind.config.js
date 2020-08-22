@@ -3,12 +3,14 @@ module.exports = {
     removeDeprecatedGapUtilities: true,
   },
 
+  experimental: {
+    uniformColorPalette: true,
+  },
+
   purge: ['{components,pages}/**/*.{js,tsx}'],
 
   theme: {
     fontFamily: {
-      casual: ['Kalam', 'cursive'],
-      marker: ['Permanent Marker', 'cursive'],
       sans: ['Inter', 'sans-serif'],
     },
 
