@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin');
+
 module.exports = {
   future: {
     removeDeprecatedGapUtilities: true,
@@ -23,5 +25,20 @@ module.exports = {
 
   variants: {},
 
-  plugins: [],
+  plugins: [
+    plugin(function ({ addUtilities }) {
+      addUtilities({
+        '.font-features': {
+          fontFeatureSettings:
+            '"tnum" var(--font-feature-tnum, off), "ss01" var(--font-feature-ss01, off)',
+        },
+        '.tabular-numbers': {
+          '--font-feature-tnum': 'on',
+        },
+        '.alternate-digits': {
+          '--font-feature-ss01': 'on',
+        },
+      });
+    }),
+  ],
 };

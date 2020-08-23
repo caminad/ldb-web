@@ -3,7 +3,6 @@ import { formatDistanceToNow, parseISO } from 'date-fns';
 import enGB from 'date-fns/locale/en-GB';
 import castArray from 'lodash/castArray';
 import { encodeName } from 'models/station';
-import Head from 'next/head';
 import Link from 'next/link';
 import { ReactNode, useCallback, useState } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -82,13 +81,11 @@ function useDistanceToNow(isoDateString?: string) {
 
 function Messages(props: { value: OneOrMany<string> }) {
   return (
-    <details className="rounded border">
-      <summary className="p-1 cursor-pointer font-bold rounded">
-        Messages
-      </summary>
-      <ul className="p-1 space-y-2 border-t text-gray-700 text-sm">
+    <details>
+      <summary className="cursor-pointer font-semibold">Messages</summary>
+      <ul className="text-gray-700 text-sm">
         {castArray(props.value).map((message, index) => (
-          <li key={`${index}-${message}`} className="whitespace-pre-line">
+          <li key={`${index}-${message}`} className="mt-2 whitespace-pre-line">
             {message
               .replace(/<\/?.*?>/g, '')
               .replace(
@@ -105,11 +102,11 @@ function Messages(props: { value: OneOrMany<string> }) {
 function ServiceTime(props: { children: string; estimate?: string }) {
   const offSchedule = props.estimate !== 'On time';
   return (
-    <span>
+    <span className="font-features tabular-numbers alternate-digits font-medium">
       <span className={clsx({ 'line-through text-gray-500': offSchedule })}>
         {props.children}
       </span>{' '}
-      {offSchedule && <span className="font-bold">{props.estimate}</span>}
+      {offSchedule && <span>{props.estimate}</span>}
     </span>
   );
 }
@@ -118,7 +115,7 @@ function Platform(props: { children?: string }) {
   if (!props.children) return null;
   return (
     <span
-      className="px-1 rounded font-bold text-xs bg-current"
+      className="font-features tabular-numbers alternate-digits px-1 rounded font-bold text-xs bg-current"
       title="Platform"
     >
       <span className="text-white">{props.children}</span>
@@ -132,12 +129,12 @@ function Location(props: {
 }) {
   return (
     <span>
-      {props.direction}{' '}
+      <span>{props.direction}</span>{' '}
       <Link
         href="/stations/[name]"
         as={`/stations/${encodeName(props.children)}`}
       >
-        <a className="inline-block font-bold hover:underline hover:text-blue-500 focus:underline focus:text-blue-500">
+        <a className="inline-block font-semibold hover:underline hover:text-blue-500 focus:underline focus:text-blue-500">
           {props.children}
         </a>
       </Link>
@@ -147,7 +144,10 @@ function Location(props: {
 
 function Operator(props: { children: string }) {
   return (
-    <span className="px-1 border rounded text-xs" title="Operator">
+    <span
+      className="px-1 border rounded text-xs font-medium tracking-tight"
+      title="Operator"
+    >
       {props.children}
     </span>
   );
@@ -238,29 +238,17 @@ export default function Services(props: { locationName: string }): JSX.Element {
 
   const distanceToNow = useDistanceToNow(data?.generatedAt);
 
-  if (error?.code === 404) {
-    return (
-      <div className="font-bold">
-        <Head>
-          <title>Not Found</title>
-        </Head>
-        Not Found
-      </div>
-    );
-  }
-
   return (
     <div className="py-2 space-y-4">
-      {distanceToNow ? (
-        <p>
-          <span className="font-bold">Live Arrivals and Departures</span>{' '}
-          <span className="text-gray-700 text-sm">
-            (updated {distanceToNow})
-          </span>
-        </p>
-      ) : (
-        <p>Loading...</p>
-      )}
+      <p>
+        <span className="inline-block font-extrabold">
+          Live Arrivals and Departures
+        </span>{' '}
+        <span className="inline-block text-gray-700 text-sm">
+          {error?.code === 404 && <>(not found)</>}
+          {distanceToNow && <>(updated {distanceToNow})</>}
+        </span>
+      </p>
       {data?.nrccMessages && <Messages value={data.nrccMessages} />}
       <ul className="max-w-full relative pl-6 flex flex-col space-y-2 overflow-x-auto">
         {allServices.map((service) => (
@@ -339,7 +327,7 @@ export default function Services(props: { locationName: string }): JSX.Element {
       <div className="h-8">
         {canLoadMore && (
           <button
-            className="w-full h-full rounded border hover:border-blue-500"
+            className="w-full h-full rounded border hover:border-blue-500 font-semibold"
             onClick={loadMore}
           >
             Show more
