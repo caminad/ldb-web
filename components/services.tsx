@@ -4,7 +4,7 @@ import enGB from 'date-fns/locale/en-GB';
 import castArray from 'lodash/castArray';
 import { encodeName } from 'models/station';
 import Link from 'next/link';
-import { ReactNode, useCallback, useState } from 'react';
+import { ReactNode, useCallback, useReducer, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 
 type OneOrMany<T> = T | T[];
@@ -79,13 +79,67 @@ function useDistanceToNow(isoDateString?: string) {
   return data;
 }
 
-function Messages(props: { value: OneOrMany<string> }) {
+function InfoButton(props: { onClick: () => void; hidden: boolean }) {
   return (
-    <details>
-      <summary className="cursor-pointer font-semibold">Messages</summary>
-      <ul className="text-gray-700 text-sm">
-        {castArray(props.value).map((message, index) => (
-          <li key={`${index}-${message}`} className="mt-2 whitespace-pre-line">
+    <button
+      className="hover:text-blue-500 focus:text-blue-500"
+      onClick={props.onClick}
+      hidden={props.hidden}
+    >
+      <svg
+        className="information-circle w-6 h-6 rounded-full"
+        viewBox="0 0 24 24"
+        width="24"
+        height="24"
+        fill="none"
+        stroke="currentColor"
+      >
+        <title>Information</title>
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      <span className="sr-only">Information</span>
+    </button>
+  );
+}
+
+function Summary(props: {
+  notFound: boolean;
+  generatedAt: string | undefined;
+  messages: string[];
+}) {
+  const [showMessages, toggleShowMessages] = useReducer(
+    (state) => !state,
+    false
+  );
+
+  const distanceToNow = useDistanceToNow(props.generatedAt);
+
+  return (
+    <div>
+      <div className="relative pr-8">
+        <span className="inline-block font-extrabold">
+          Live Arrivals and Departures
+        </span>{' '}
+        <span className="inline-block text-gray-700 text-sm">
+          {props.notFound && <>(not found)</>}
+          {distanceToNow && <>(updated {distanceToNow})</>}
+        </span>{' '}
+        <span className="absolute top-0 right-0">
+          <InfoButton
+            onClick={toggleShowMessages}
+            hidden={props.messages.length === 0}
+          />
+        </span>
+      </div>
+
+      <ul className="text-gray-700 text-sm" hidden={!showMessages}>
+        {props.messages.map((message, index) => (
+          <li key={index} className="mt-2 whitespace-pre-line">
             {message
               .replace(/<\/?.*?>/g, '')
               .replace(
@@ -95,7 +149,7 @@ function Messages(props: { value: OneOrMany<string> }) {
           </li>
         ))}
       </ul>
-    </details>
+    </div>
   );
 }
 
@@ -236,20 +290,13 @@ export default function Services(props: { locationName: string }): JSX.Element {
     props.locationName
   );
 
-  const distanceToNow = useDistanceToNow(data?.generatedAt);
-
   return (
     <div className="py-2 space-y-4">
-      <p>
-        <span className="inline-block font-extrabold">
-          Live Arrivals and Departures
-        </span>{' '}
-        <span className="inline-block text-gray-700 text-sm">
-          {error?.code === 404 && <>(not found)</>}
-          {distanceToNow && <>(updated {distanceToNow})</>}
-        </span>
-      </p>
-      {data?.nrccMessages && <Messages value={data.nrccMessages} />}
+      <Summary
+        notFound={error?.code === 404}
+        generatedAt={data?.generatedAt}
+        messages={castArray(data?.nrccMessages || [])}
+      />
       <ul className="max-w-full relative pl-6 flex flex-col space-y-2 overflow-x-auto">
         {allServices.map((service) => (
           <>
