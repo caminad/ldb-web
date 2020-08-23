@@ -102,7 +102,7 @@ function Messages(props: { value: OneOrMany<string> }) {
 function ServiceTime(props: { children: string; estimate?: string }) {
   const offSchedule = props.estimate !== 'On time';
   return (
-    <span className="font-features tabular-numbers alternate-digits font-medium">
+    <span className="font-features tabular-numbers stylistic-alternates font-medium">
       <span className={clsx({ 'line-through text-gray-500': offSchedule })}>
         {props.children}
       </span>{' '}
@@ -115,7 +115,7 @@ function Platform(props: { children?: string }) {
   if (!props.children) return null;
   return (
     <span
-      className="font-features tabular-numbers alternate-digits px-1 rounded font-bold text-xs bg-current"
+      className="font-features tabular-numbers stylistic-alternates px-1 rounded font-bold text-xs bg-current"
       title="Platform"
     >
       <span className="text-white">{props.children}</span>

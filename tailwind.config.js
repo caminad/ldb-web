@@ -26,17 +26,20 @@ module.exports = {
   variants: {},
 
   plugins: [
-    plugin(function ({ addUtilities }) {
-      addUtilities({
-        '.font-features': {
+    plugin(function ({ addBase, addUtilities }) {
+      addBase({
+        '*, ::before, ::after': {
           fontFeatureSettings:
-            '"tnum" var(--font-feature-tnum, off), "ss01" var(--font-feature-ss01, off)',
+            '"tnum" var(--font-feature-tnum, off), "salt" var(--font-feature-salt, off)',
         },
+      });
+
+      addUtilities({
         '.tabular-numbers': {
           '--font-feature-tnum': 'on',
         },
-        '.alternate-digits': {
-          '--font-feature-ss01': 'on',
+        '.stylistic-alternates': {
+          '--font-feature-salt': 'on',
         },
       });
     }),
