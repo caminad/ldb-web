@@ -7,12 +7,7 @@ export default class Document extends NextDocument {
         <Head>
           <link
             rel="preconnect"
-            href="https://fonts.googleapis.com/"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preconnect"
-            href="https://fonts.gstatic.com/"
+            href="https://rsms.me"
             crossOrigin="anonymous"
           />
         </Head>
