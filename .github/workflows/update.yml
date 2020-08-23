@@ -22,3 +22,18 @@ jobs:
           commit-message: 'Update inter.css'
           branch: update-inter
           title: 'Update inter.css'
+
+  stations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - run: npm install
+      - run: node ./scripts/get-stations.js > ./data/stations.json
+      - uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: 'Update stations.json'
+          branch: update-stations
+          title: 'Update stations.json'
