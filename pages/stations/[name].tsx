@@ -51,7 +51,7 @@ export default function StationPage() {
               query: { search: encodeName(name) },
             }}
           >
-            <a className="w-full h-12 border border-b-2 border-current p-2 rounded shadow flex flex-col justify-around focus:outline-none focus:text-blue-500">
+            <a className="w-full h-12 border border-b-2 border-current p-2 rounded shadow flex flex-col justify-around font-medium focus:outline-none focus:text-blue-500">
               <span className="truncate">{name}</span>
             </a>
           </Link>

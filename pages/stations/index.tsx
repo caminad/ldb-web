@@ -59,7 +59,7 @@ export default function StationsPage() {
           }}
         >
           <input
-            className="w-full h-12 appearance-none border border-b-2 border-current p-2 rounded shadow placeholder-current focus:outline-none focus:text-blue-500"
+            className="w-full h-12 appearance-none border border-b-2 border-current p-2 rounded shadow placeholder-current font-medium focus:outline-none focus:text-blue-500"
             type="search"
             autoFocus={true}
             value={searchTerm}
@@ -82,7 +82,7 @@ export default function StationsPage() {
                 href="/stations/[name]"
                 as={`/stations/${encodeName(suggestedName)}`}
               >
-                <a className="block p-1 whitespace-no-wrap hover:underline hover:text-blue-500 focus:underline focus:text-blue-500">
+                <a className="block p-1 whitespace-no-wrap font-medium hover:underline hover:text-blue-500 focus:underline focus:text-blue-500">
                   {suggestedName}
                 </a>
               </Link>
