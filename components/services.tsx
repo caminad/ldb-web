@@ -285,6 +285,99 @@ function Reason(props: { children?: string }) {
   );
 }
 
+function PlaceholderList() {
+  return (
+    <ul className="flex flex-col space-y-2">
+      {[4, 10, 0, 6, 2, 2, 6, 1, 6, 0, 10, 10, 10, 0, 5, 3, 0, 6, 4, 11].map(
+        (x, i) => (
+          <li key={i}>
+            <div
+              className="h-6 max-w-full rounded bg-gray-200 animate-pulse"
+              style={{ width: `${15 + x}rem` }}
+            />
+          </li>
+        )
+      )}
+    </ul>
+  );
+}
+
+function ServiceList(props: { items: Service[] }) {
+  return (
+    <ul className="max-w-full relative pl-6 flex flex-col space-y-2 overflow-x-auto">
+      {props.items.map((service) => (
+        <>
+          {service.sta && service.origin?.locationName && (
+            <li className="flex flex-col" key={service.serviceID + '-arrival'}>
+              <svg
+                className="absolute left-0 w-6 h-6 text-pink-500"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
+                <title>Arrival</title>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                />
+              </svg>
+              <Arrival
+                scheduled={service.sta}
+                estimated={service.eta}
+                isCancelled={service.isCancelled}
+                from={service.origin.locationName}
+                platform={service.platform}
+                operator={service.operator}
+              />
+              <Reason>{service.cancelReason || service.delayReason}</Reason>
+            </li>
+          )}
+          {service.std && castArray(service.destination)[0]?.locationName && (
+            <li
+              className="flex flex-col"
+              key={service.serviceID + '-departure'}
+            >
+              <svg
+                className="absolute left-0 w-6 h-6 text-indigo-500"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
+                <title>Departure</title>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              <Departure
+                scheduled={service.std}
+                estimated={service.etd}
+                isCancelled={service.isCancelled}
+                to={castArray(service.destination).map((d) => d.locationName)}
+                via={castArray(service.destination)[0].via?.replace(
+                  /^via /,
+                  ''
+                )}
+                platform={service.platform}
+                operator={service.operator}
+              />
+              <Reason>{service.cancelReason || service.delayReason}</Reason>
+            </li>
+          )}
+        </>
+      ))}
+    </ul>
+  );
+}
+
 export default function Services(props: { locationName: string }): JSX.Element {
   const { data, error, allServices, canLoadMore, loadMore } = useLiveServices(
     props.locationName
@@ -297,80 +390,8 @@ export default function Services(props: { locationName: string }): JSX.Element {
         generatedAt={data?.generatedAt}
         messages={castArray(data?.nrccMessages || [])}
       />
-      <ul className="max-w-full relative pl-6 flex flex-col space-y-2 overflow-x-auto">
-        {allServices.map((service) => (
-          <>
-            {service.sta && service.origin?.locationName && (
-              <li
-                className="flex flex-col"
-                key={service.serviceID + '-arrival'}
-              >
-                <svg
-                  className="absolute left-0 w-6 h-6 text-pink-500"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                >
-                  <title>Arrival</title>
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                  />
-                </svg>
-                <Arrival
-                  scheduled={service.sta}
-                  estimated={service.eta}
-                  isCancelled={service.isCancelled}
-                  from={service.origin.locationName}
-                  platform={service.platform}
-                  operator={service.operator}
-                />
-                <Reason>{service.cancelReason || service.delayReason}</Reason>
-              </li>
-            )}
-            {service.std && castArray(service.destination)[0]?.locationName && (
-              <li
-                className="flex flex-col"
-                key={service.serviceID + '-departure'}
-              >
-                <svg
-                  className="absolute left-0 w-6 h-6 text-indigo-500"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                >
-                  <title>Departure</title>
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                  />
-                </svg>
-                <Departure
-                  scheduled={service.std}
-                  estimated={service.etd}
-                  isCancelled={service.isCancelled}
-                  to={castArray(service.destination).map((d) => d.locationName)}
-                  via={castArray(service.destination)[0].via?.replace(
-                    /^via /,
-                    ''
-                  )}
-                  platform={service.platform}
-                  operator={service.operator}
-                />
-                <Reason>{service.cancelReason || service.delayReason}</Reason>
-              </li>
-            )}
-          </>
-        ))}
-      </ul>
+      {!data && !error && <PlaceholderList />}
+      <ServiceList items={allServices} />
       <div className="h-8">
         {canLoadMore && (
           <button
