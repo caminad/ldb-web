@@ -1,4 +1,5 @@
 import ErrorBoundary from 'components/error-boundary';
+import 'styles/inter.css';
 import 'styles/tailwind.css';
 
 export default {

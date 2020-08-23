@@ -1,0 +1,24 @@
+name: Update
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    # manual trigger
+
+jobs:
+  inter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch inter.css
+        run: curl -s https://rsms.me/inter/inter.css |
+          sed -e '0,/--- variable ---/d'
+          -e '/--- experimental multi-axis variable ---/,$d'
+          -e '/^$/d'
+          -e "s|url('|&https://rsms.me/inter/|g" > ./styles/inter.css
+      - uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: 'Update inter.css'
+          branch: update-inter
+          title: 'Update inter.css'

@@ -1,4 +1,5 @@
 import PoweredByNationalRailEnquiries from 'components/logos/powered-by-national-rail-enquiries';
+import 'styles/inter.css';
 import 'styles/tailwind.css';
 
 export default {
