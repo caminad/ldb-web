@@ -21,11 +21,7 @@ module.exports = {
     },
   },
 
-  variants: {
-    borderColor: ['responsive', 'hover', 'focus', 'focus-within'],
-    boxShadow: ['responsive', 'hover', 'focus', 'focus-within'],
-    display: ['responsive', 'group-hover', 'group-focus'],
-  },
+  variants: {},
 
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [],
 };
