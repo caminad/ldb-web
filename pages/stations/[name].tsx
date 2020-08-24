@@ -74,9 +74,7 @@ export const getStaticProps: GetStaticProps<
 export default function StationPage({
   name,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { data, allServices, canLoadMore, loadMore } = useLiveServices(
-    name || undefined
-  );
+  const [data, loadMore] = useLiveServices(name || undefined);
 
   return (
     <div className="min-h-screen flex flex-col justify-between items-center p-2 max-w-screen-sm m-auto">
@@ -112,9 +110,19 @@ export default function StationPage({
           {name && (
             <>
               {!data && <PlaceholderList />}
-              <ServiceList items={allServices} />
+              {data?.busServices && (
+                <ServiceList
+                  items={castArray(data.busServices).map((service) => ({
+                    ...service,
+                    platform: 'bus',
+                  }))}
+                />
+              )}
+              {data?.trainServices && (
+                <ServiceList items={castArray(data.trainServices)} />
+              )}
               <div className="h-8">
-                {canLoadMore && (
+                {loadMore && (
                   <button
                     className="w-full h-full rounded border hover:border-blue-500 font-semibold"
                     onClick={loadMore}

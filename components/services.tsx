@@ -35,6 +35,10 @@ interface Station {
   busServices?: OneOrMany<Service>;
 }
 
+function count(...items: (Service | Service[] | undefined)[]): number {
+  return ([] as unknown[]).concat(...items.filter(Boolean)).length;
+}
+
 const PAGE_SIZE = 20;
 
 export function useLiveServices(locationName: string | undefined) {
@@ -47,24 +51,24 @@ export function useLiveServices(locationName: string | undefined) {
     refreshInterval: 25000,
   });
 
-  const allServices = ([] as Service[]).concat(
-    data?.busServices ?? [],
-    data?.trainServices ?? []
-  );
-
   const loadMore = useCallback(async () => {
     const nextLimit = limit + PAGE_SIZE;
+
     // Populate the next page with the current results to preserve visible items.
     await mutate(
       `/api/stations/${encodeName(locationName)}?limit=${nextLimit}`,
       data
     );
+
     setLimit(nextLimit);
   }, [limit, locationName, data]);
 
-  const canLoadMore = Boolean(data) && allServices.length === limit;
-
-  return { data, allServices, loadMore, canLoadMore };
+  return [
+    data,
+    data && count(data.busServices, data.trainServices) === limit
+      ? loadMore
+      : undefined,
+  ] as const;
 }
 
 function useDistanceToNow(isoDateString?: string) {
