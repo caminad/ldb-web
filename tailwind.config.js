@@ -5,9 +5,7 @@ module.exports = {
     removeDeprecatedGapUtilities: true,
   },
 
-  experimental: {
-    uniformColorPalette: true,
-  },
+  experimental: 'all',
 
   purge: ['{components,pages}/**/*.{js,tsx}'],
 
