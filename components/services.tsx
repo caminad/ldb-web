@@ -37,13 +37,13 @@ interface Station {
 
 const PAGE_SIZE = 20;
 
-function useLiveServices(locationName: string) {
+export function useLiveServices(locationName: string | undefined) {
   const [limit, setLimit] = useState(PAGE_SIZE);
   const key = locationName
     ? `/api/stations/${encodeName(locationName)}?limit=${limit}`
     : null;
 
-  const { data, error } = useSWR<Station>(key, {
+  const { data } = useSWR<Station>(key, {
     refreshInterval: 25000,
   });
 
@@ -64,7 +64,7 @@ function useLiveServices(locationName: string) {
 
   const canLoadMore = Boolean(data) && allServices.length === limit;
 
-  return { data, error, allServices, loadMore, canLoadMore };
+  return { data, allServices, loadMore, canLoadMore };
 }
 
 function useDistanceToNow(isoDateString?: string) {
@@ -109,8 +109,8 @@ function InfoButton(props: { onClick: () => void; hidden: boolean }) {
   );
 }
 
-function Summary(props: {
-  notFound: boolean;
+export function Summary(props: {
+  label: string;
   generatedAt: string | undefined;
   messages: string[];
 }) {
@@ -124,11 +124,8 @@ function Summary(props: {
   return (
     <div>
       <div className="relative pr-8">
-        <span className="inline-block font-extrabold">
-          Live Arrivals and Departures
-        </span>{' '}
+        <span className="inline-block font-extrabold">{props.label}</span>{' '}
         <span className="inline-block text-gray-700 text-sm">
-          {props.notFound && <>(not found)</>}
           {distanceToNow && <>(updated {distanceToNow})</>}
         </span>{' '}
         <span className="absolute top-0 right-0">
@@ -228,7 +225,7 @@ function Reason(props: { children?: string }) {
   );
 }
 
-function PlaceholderList() {
+export function PlaceholderList() {
   return (
     <ul className="flex flex-col space-y-2">
       {[4, 10, 0, 6, 2, 2, 6, 1, 6, 0, 10, 10, 10, 0, 5, 3, 0, 6, 4, 11].map(
@@ -245,7 +242,7 @@ function PlaceholderList() {
   );
 }
 
-function ServiceList(props: { items: Service[] }) {
+export function ServiceList(props: { items: Service[] }) {
   return (
     <ul className="max-w-full flex flex-col space-y-2 overflow-x-auto">
       {props.items.map((service) => (
@@ -288,33 +285,5 @@ function ServiceList(props: { items: Service[] }) {
         </>
       ))}
     </ul>
-  );
-}
-
-export default function Services(props: { locationName: string }): JSX.Element {
-  const { data, error, allServices, canLoadMore, loadMore } = useLiveServices(
-    props.locationName
-  );
-
-  return (
-    <div className="py-2 space-y-4">
-      <Summary
-        notFound={error?.code === 404}
-        generatedAt={data?.generatedAt}
-        messages={castArray(data?.nrccMessages || [])}
-      />
-      {!data && !error && <PlaceholderList />}
-      <ServiceList items={allServices} />
-      <div className="h-8">
-        {canLoadMore && (
-          <button
-            className="w-full h-full rounded border hover:border-blue-500 font-semibold"
-            onClick={loadMore}
-          >
-            Show more
-          </button>
-        )}
-      </div>
-    </div>
   );
 }
