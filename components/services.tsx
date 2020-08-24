@@ -12,7 +12,9 @@ type OneOrMany<T> = T | T[];
 export interface Service {
   serviceID: string;
   origin: { locationName: string };
-  destination: OneOrMany<{ locationName: string; via?: string }>;
+  destination:
+    | { locationName: string; via?: string }
+    | { locationName: string }[];
   operator: string;
   sta?: string;
   eta?: string;
@@ -166,33 +168,26 @@ function ServiceTime(props: { children: string; estimate?: string }) {
 }
 
 function Platform(props: { children?: string }) {
-  if (!props.children) return null;
   return (
-    <span
-      className="font-features tabular-numbers stylistic-alternates px-1 rounded font-bold text-xs bg-current"
+    <div
+      className="flex-shrink-0 flex items-center justify-center w-8 rounded bg-current text-xs font-semibold font-features tabular-numbers uppercase"
       title="Platform"
     >
-      <span className="text-white">{props.children}</span>
-    </span>
+      <span className="text-white">{props.children || '―'}</span>
+    </div>
   );
 }
 
-function Location(props: {
-  direction: 'to' | 'from' | 'via';
-  children: string;
-}) {
+function Location(props: { children: string }) {
   return (
-    <span>
-      <span>{props.direction}</span>{' '}
-      <Link
-        href="/stations/[name]"
-        as={`/stations/${encodeName(props.children)}`}
-      >
-        <a className="inline-block font-semibold hover:underline hover:text-blue-500 focus:underline focus:text-blue-500">
-          {props.children}
-        </a>
-      </Link>
-    </span>
+    <Link
+      href="/stations/[name]"
+      as={`/stations/${encodeName(props.children)}`}
+    >
+      <a className="inline-block font-semibold hover:underline hover:text-blue-500 focus:underline focus:text-blue-500">
+        {props.children}
+      </a>
+    </Link>
   );
 }
 
@@ -211,7 +206,7 @@ function DetailWrapper(props: { children: ReactNode; isCancelled?: boolean }) {
   return (
     <div
       className={clsx(
-        'whitespace-no-wrap overflow-x-auto flex items-center space-x-2',
+        'whitespace-no-wrap overflow-x-auto flex items-center space-x-1',
         {
           'text-gray-500': props.isCancelled,
         }
@@ -219,58 +214,6 @@ function DetailWrapper(props: { children: ReactNode; isCancelled?: boolean }) {
     >
       {props.children}
     </div>
-  );
-}
-
-function Arrival(props: {
-  scheduled: string;
-  estimated?: string;
-  isCancelled?: boolean;
-  from: string;
-  platform?: string;
-  operator: string;
-}) {
-  return (
-    <DetailWrapper isCancelled={props.isCancelled}>
-      <ServiceTime estimate={props.estimated}>{props.scheduled}</ServiceTime>
-      <Platform>{props.platform}</Platform>
-      <p>
-        <Location direction="from">{props.from}</Location>
-      </p>
-      <Operator>{props.operator}</Operator>
-    </DetailWrapper>
-  );
-}
-
-function Departure(props: {
-  scheduled: string;
-  estimated?: string;
-  isCancelled?: boolean;
-  to: string[];
-  via?: string;
-  platform?: string;
-  operator: string;
-}) {
-  return (
-    <DetailWrapper isCancelled={props.isCancelled}>
-      <ServiceTime estimate={props.estimated}>{props.scheduled}</ServiceTime>
-      <Platform>{props.platform}</Platform>
-      <p>
-        {props.to.map((destination) => (
-          <>
-            <Location key={destination} direction="to">
-              {destination}
-            </Location>{' '}
-          </>
-        ))}
-        {props.via && (
-          <Location key={props.via} direction="via">
-            {props.via}
-          </Location>
-        )}
-      </p>
-      <Operator>{props.operator}</Operator>
-    </DetailWrapper>
   );
 }
 
@@ -304,35 +247,18 @@ function PlaceholderList() {
 
 function ServiceList(props: { items: Service[] }) {
   return (
-    <ul className="max-w-full relative pl-6 flex flex-col space-y-2 overflow-x-auto">
+    <ul className="max-w-full flex flex-col space-y-2 overflow-x-auto">
       {props.items.map((service) => (
         <>
           {service.sta && service.origin?.locationName && (
             <li className="flex flex-col" key={service.serviceID + '-arrival'}>
-              <svg
-                className="absolute left-0 w-6 h-6 text-pink-500"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <title>Arrival</title>
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                />
-              </svg>
-              <Arrival
-                scheduled={service.sta}
-                estimated={service.eta}
-                isCancelled={service.isCancelled}
-                from={service.origin.locationName}
-                platform={service.platform}
-                operator={service.operator}
-              />
+              <DetailWrapper isCancelled={service.isCancelled}>
+                <ServiceTime estimate={service.eta}>{service.sta}</ServiceTime>
+                <Platform>{service.platform}</Platform>
+                <span className="font-black text-pink-500">⟵</span>
+                <Location>{service.origin.locationName}</Location>
+                <Operator>{service.operator}</Operator>
+              </DetailWrapper>
               <Reason>{service.cancelReason || service.delayReason}</Reason>
             </li>
           )}
@@ -341,34 +267,21 @@ function ServiceList(props: { items: Service[] }) {
               className="flex flex-col"
               key={service.serviceID + '-departure'}
             >
-              <svg
-                className="absolute left-0 w-6 h-6 text-indigo-500"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <title>Departure</title>
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
-              <Departure
-                scheduled={service.std}
-                estimated={service.etd}
-                isCancelled={service.isCancelled}
-                to={castArray(service.destination).map((d) => d.locationName)}
-                via={castArray(service.destination)[0].via?.replace(
-                  /^via /,
-                  ''
-                )}
-                platform={service.platform}
-                operator={service.operator}
-              />
+              <DetailWrapper isCancelled={service.isCancelled}>
+                <ServiceTime estimate={service.etd}>{service.std}</ServiceTime>
+                <Platform>{service.platform}</Platform>
+                <span className="font-black text-indigo-500">⟶</span>
+                {castArray(service.destination)
+                  .map((d) => d.locationName)
+                  .map((destination) => (
+                    <Location key={destination}>{destination}</Location>
+                  ))}
+                {!Array.isArray(service.destination) &&
+                  service.destination.via && (
+                    <span> {service.destination.via}</span>
+                  )}
+                <Operator>{service.operator}</Operator>
+              </DetailWrapper>
               <Reason>{service.cancelReason || service.delayReason}</Reason>
             </li>
           )}

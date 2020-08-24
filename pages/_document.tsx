@@ -3,7 +3,7 @@ import NextDocument, { Head, Html, Main, NextScript } from 'next/document';
 export default class Document extends NextDocument {
   render() {
     return (
-      <Html className="bg-white stylistic-alternates" lang="en">
+      <Html className="bg-white text-gray-800 stylistic-alternates" lang="en">
         <Head>
           <link
             rel="preconnect"
