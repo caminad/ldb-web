@@ -4,7 +4,7 @@ import enGB from 'date-fns/locale/en-GB';
 import castArray from 'lodash/castArray';
 import { encodeName } from 'models/station';
 import Link from 'next/link';
-import { ReactNode, useCallback, useReducer, useState } from 'react';
+import { Fragment, ReactNode, useCallback, useReducer, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 
 type OneOrMany<T> = T | T[];
@@ -250,9 +250,9 @@ export function ServiceList(props: { items: Service[] }) {
   return (
     <ul className="max-w-full flex flex-col space-y-2 overflow-x-auto">
       {props.items.map((service) => (
-        <>
+        <Fragment key={service.serviceID}>
           {service.sta && service.origin?.locationName && (
-            <li className="flex flex-col" key={service.serviceID + '-arrival'}>
+            <li className="flex flex-col">
               <DetailWrapper isCancelled={service.isCancelled}>
                 <ServiceTime estimate={service.eta}>{service.sta}</ServiceTime>
                 <Platform>{service.platform}</Platform>
@@ -264,10 +264,7 @@ export function ServiceList(props: { items: Service[] }) {
             </li>
           )}
           {service.std && castArray(service.destination)[0]?.locationName && (
-            <li
-              className="flex flex-col"
-              key={service.serviceID + '-departure'}
-            >
+            <li className="flex flex-col">
               <DetailWrapper isCancelled={service.isCancelled}>
                 <ServiceTime estimate={service.etd}>{service.std}</ServiceTime>
                 <Platform>{service.platform}</Platform>
@@ -286,7 +283,7 @@ export function ServiceList(props: { items: Service[] }) {
               <Reason>{service.cancelReason || service.delayReason}</Reason>
             </li>
           )}
-        </>
+        </Fragment>
       ))}
     </ul>
   );
