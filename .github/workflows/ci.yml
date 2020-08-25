@@ -7,9 +7,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - run: npm ci
-      - run: npm run lint
-      - run: npm test
-        env:
-          CI: true
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npx -c 'tsc -p .'
+
+      - name: Lint
+        run: npx -c 'eslint .'
+
+      - name: Test
+        run: npx -c 'jest --ci'
