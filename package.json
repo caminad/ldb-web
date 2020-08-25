@@ -6,7 +6,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "storybook": "start-storybook",
     "lint": "eslint .",
     "test": "jest"
   },
@@ -27,10 +26,6 @@
     "xmlbuilder2": "^2.3.1"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^6.0.13",
-    "@storybook/addon-controls": "^6.0.13",
-    "@storybook/addon-docs": "^6.0.13",
-    "@storybook/react": "^6.0.13",
     "@types/jest": "^26.0.10",
     "@types/lodash": "^4.14.159",
     "@types/node": "^14.6.0",
