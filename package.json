@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@next/bundle-analyzer": "^9.5.2",
+    "@react-aria/button": "^3.2.1",
+    "@react-aria/focus": "^3.2.0",
+    "@react-stately/toggle": "^3.2.0",
     "clsx": "^1.1.1",
     "csv-parse": "^4.12.0",
     "date-fns": "^2.15.0",
@@ -25,6 +28,7 @@
     "xmlbuilder2": "^2.3.1"
   },
   "devDependencies": {
+    "@react-types/checkbox": "^3.1.0",
     "@types/jest": "^26.0.10",
     "@types/lodash": "^4.14.160",
     "@types/node": "^14.6.0",
