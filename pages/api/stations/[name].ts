@@ -16,12 +16,26 @@ const isLocationName = Object.prototype.hasOwnProperty.bind(stations) as {
   (v: string): v is keyof typeof stations;
 };
 
-function setLocationNamesFromCRS(obj: any): any {
+function setLocationNamesFromCRS(obj: any): void {
   Object.values(obj).filter(isObject).forEach(setLocationNamesFromCRS);
   if (obj.crs) {
     obj.locationName = stationsByCRS[obj.crs];
   }
   return obj;
+}
+
+function formatMessages(data: any): void {
+  data.nrccMessages = ([] as any[])
+    .concat(data.nrccMessages || [])
+    .map((message) =>
+      message
+        .replace(/<\/?.*?>/g, '')
+        .replace(
+          / More (?:information|details) can be found in Latest Travel News\.?/i,
+          ''
+        )
+        .trim()
+    );
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -31,12 +45,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(404).json({ error: 'Not Found' });
   }
 
-  const data = await client
-    .request('ArrivalsDepartures', {
-      crs: stations[locationName],
-      numRows: Number(req.query.limit) || undefined,
-    })
-    .then(setLocationNamesFromCRS);
+  const data = await client.request('ArrivalsDepartures', {
+    crs: stations[locationName],
+    numRows: Number(req.query.limit) || undefined,
+  });
+
+  setLocationNamesFromCRS(data);
+  formatMessages(data);
 
   res.json(data);
 };

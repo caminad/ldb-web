@@ -3,6 +3,7 @@ import PoweredByNationalRailEnquiries from 'components/PoweredByNationalRailEnqu
 import ServiceList from 'components/ServiceList';
 import Summary from 'components/Summary';
 import stations from 'data/stations.json';
+import useDistanceToNow from 'hooks/useDistanceToNow';
 import useLiveServices from 'hooks/useLiveServices';
 import castArray from 'lodash/castArray';
 import { decodeName, encodeName } from 'models/Station';
@@ -74,6 +75,8 @@ export default function StationPage({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [data, loadMore] = useLiveServices(name || undefined);
 
+  const distanceToNow = useDistanceToNow(data?.generatedAt);
+
   return (
     <div className="min-h-screen flex flex-col justify-between items-center p-2 max-w-screen-sm m-auto">
       {name ? (
@@ -100,11 +103,15 @@ export default function StationPage({
         </div>
 
         <div className="py-2 space-y-4">
-          <Summary
-            label={name ? 'Live Arrivals and Departures' : 'Not Found'}
-            generatedAt={data?.generatedAt}
-            messages={castArray(data?.nrccMessages || [])}
-          />
+          <Summary messages={data ? data.nrccMessages : []}>
+            <span className="inline-block font-extrabold">
+              {name ? 'Live Arrivals and Departures' : 'Not Found'}
+            </span>{' '}
+            <span className="inline-block text-gray-700 text-sm">
+              {distanceToNow && `updated ${distanceToNow}`}
+            </span>
+          </Summary>
+
           {name && (
             <>
               {!data && <PlaceholderList />}

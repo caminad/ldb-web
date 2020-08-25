@@ -3,30 +3,16 @@ import { FocusRing } from '@react-aria/focus';
 import { useToggleState } from '@react-stately/toggle';
 import { ToggleProps } from '@react-types/checkbox';
 import clsx from 'clsx';
-import useDistanceToNow from 'hooks/useDistanceToNow';
 import { useRef } from 'react';
 
-export default function Summary(
-  props: ToggleProps & {
-    label: string;
-    generatedAt: string | undefined;
-    messages: string[];
-  }
-) {
+export default function Summary(props: ToggleProps & { messages: string[] }) {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const toggleState = useToggleState(props);
   const toggleButton = useToggleButton(props, toggleState, buttonRef);
 
-  const distanceToNow = useDistanceToNow(props.generatedAt);
-
   return (
     <div className="relative">
-      <div className="pr-8">
-        <span className="inline-block font-extrabold">{props.label}</span>{' '}
-        <span className="inline-block text-gray-700 text-sm">
-          {distanceToNow && <>(updated {distanceToNow})</>}
-        </span>
-      </div>
+      <div className="pr-8">{props.children}</div>
 
       <FocusRing focusRingClass="shadow-outline">
         <button
@@ -60,16 +46,13 @@ export default function Summary(
         </button>
       </FocusRing>
 
-      <ul className="text-gray-700 text-sm" hidden={!toggleState.isSelected}>
+      <ul
+        className="text-gray-700 text-sm"
+        hidden={!toggleState.isSelected || props.messages.length === 0}
+      >
         {props.messages.map((message, index) => (
           <li key={index} className="mt-2 whitespace-pre-line">
-            {message
-              .replace(/<\/?.*?>/g, '')
-              .replace(
-                / More (?:information|details) can be found in Latest Travel News\.?/i,
-                ''
-              )
-              .trim()}
+            {message}
           </li>
         ))}
       </ul>
