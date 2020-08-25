@@ -6,7 +6,7 @@ type OneOrMany<T> = T | T[];
 export default interface Station {
   locationName: string;
   generatedAt: string;
-  nrccMessages?: OneOrMany<string>;
+  nrccMessages: string[];
   platformAvailable?: boolean;
   trainServices?: OneOrMany<Service>;
   busServices?: OneOrMany<Service>;
