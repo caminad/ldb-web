@@ -1,4 +1,4 @@
-import useStationSuggestions from 'hooks/use-station-suggestions';
+import useStationSuggestions from 'hooks/useStationSuggestions';
 import { decodeName, encodeName } from 'models/station';
 import Head from 'next/head';
 import Link from 'next/link';
