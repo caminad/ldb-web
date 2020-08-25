@@ -1,5 +1,5 @@
 import useStationSuggestions from 'hooks/useStationSuggestions';
-import { decodeName, encodeName } from 'models/station';
+import { decodeName, encodeName } from 'models/Station';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';

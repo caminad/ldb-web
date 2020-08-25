@@ -1,4 +1,16 @@
 import castArray from 'lodash/castArray';
+import Service from 'models/Service';
+
+type OneOrMany<T> = T | T[];
+
+export default interface Station {
+  locationName: string;
+  generatedAt: string;
+  nrccMessages?: OneOrMany<string>;
+  platformAvailable?: boolean;
+  trainServices?: OneOrMany<Service>;
+  busServices?: OneOrMany<Service>;
+}
 
 export function decodeName(x: string | string[] | undefined): string {
   const [encoded = ''] = castArray(x);

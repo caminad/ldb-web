@@ -2,7 +2,7 @@ import stations from 'data/stations.json';
 import LiveDepartureBoardClient from 'ldb/Client';
 import invert from 'lodash/invert';
 import isObject from 'lodash/isObject';
-import { decodeName } from 'models/station';
+import { decodeName } from 'models/Station';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 const stationsByCRS = invert(stations);
