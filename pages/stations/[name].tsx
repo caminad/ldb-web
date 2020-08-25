@@ -1,4 +1,4 @@
-import PoweredByNationalRailEnquiries from 'components/logos/powered-by-national-rail-enquiries';
+import PoweredByNationalRailEnquiries from 'components/PoweredByNationalRailEnquiries';
 import {
   PlaceholderList,
   ServiceList,
