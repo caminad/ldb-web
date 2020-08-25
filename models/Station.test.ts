@@ -1,4 +1,4 @@
-import { decodeName, encodeName } from 'models/station';
+import { decodeName, encodeName } from 'models/Station';
 
 describe(decodeName, () => {
   it('replaces underscores with spaces', () => {

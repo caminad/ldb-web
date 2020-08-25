@@ -1,8 +1,8 @@
 import { decodeHTML, decodeXML } from 'entities';
 import { Either, isLeft } from 'fp-ts/lib/Either';
 import { Errors } from 'io-ts';
-import * as operations from './operations';
-import { SoapFault, SoapRequest } from './soap';
+import * as operations from 'ldb/operations';
+import { SoapFault, SoapRequest } from 'ldb/soap';
 
 export default class Client {
   endpoint = 'https://realtime.nationalrail.co.uk/OpenLDBWS/ldb11.asmx';

@@ -1,13 +1,11 @@
+import PlaceholderList from 'components/PlaceholderList';
 import PoweredByNationalRailEnquiries from 'components/PoweredByNationalRailEnquiries';
-import {
-  PlaceholderList,
-  ServiceList,
-  Summary,
-  useLiveServices,
-} from 'components/services';
+import ServiceList from 'components/ServiceList';
+import Summary from 'components/Summary';
 import stations from 'data/stations.json';
+import useLiveServices from 'hooks/useLiveServices';
 import castArray from 'lodash/castArray';
-import { decodeName, encodeName } from 'models/station';
+import { decodeName, encodeName } from 'models/Station';
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
