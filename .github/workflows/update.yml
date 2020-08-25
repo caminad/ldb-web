@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: npm install
+      - run: npm ci
       - run: node ./scripts/get-stations.js > ./data/stations.json
       - uses: peter-evans/create-pull-request@v3
         with:
