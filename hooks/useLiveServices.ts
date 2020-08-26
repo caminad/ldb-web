@@ -1,34 +1,43 @@
 import Station, { encodeName } from 'models/Station';
-import { useCallback, useState } from 'react';
-import useSWR, { mutate } from 'swr';
+import { useCallback, useEffect, useState } from 'react';
+import useSWR, { cache } from 'swr';
 
-const PAGE_SIZE = 20;
+const LIMIT_STEP = 20;
 
 function count<T>(...items: (T | T[] | undefined)[]): number {
   return ([] as unknown[]).concat(...items.filter(Boolean)).length;
 }
 
-export default function useLiveServices(locationName: string | undefined) {
-  const [limit, setLimit] = useState(PAGE_SIZE);
-  const key = locationName
-    ? `/api/stations/${encodeName(locationName)}?limit=${limit}`
-    : null;
+function getKey(name: string | undefined, limit: number) {
+  if (name) {
+    return `/api/stations/${encodeName(name)}?limit=${limit}`;
+  } else {
+    return null;
+  }
+}
 
-  const { data } = useSWR<Station>(key, {
+export default function useLiveServices(name: string | undefined) {
+  const [limit, setLimit] = useState(LIMIT_STEP);
+
+  const { data } = useSWR<Station>(getKey(name, limit), {
     refreshInterval: 25000,
   });
 
-  const loadMore = useCallback(async () => {
-    const nextLimit = limit + PAGE_SIZE;
+  const loadMore = useCallback(() => {
+    setLimit((prevLimit) => {
+      const nextLimit = prevLimit + LIMIT_STEP;
 
-    // Populate the next page with the current results to preserve visible items.
-    await mutate(
-      `/api/stations/${encodeName(locationName)}?limit=${nextLimit}`,
-      data
-    );
+      // Populate the next page with the current results to preserve visible items.
+      cache.set(getKey(name, nextLimit), data);
 
-    setLimit(nextLimit);
-  }, [limit, locationName, data]);
+      return nextLimit;
+    });
+  }, [name, data]);
+
+  useEffect(() => {
+    // Reset limit on location change.
+    setLimit(LIMIT_STEP);
+  }, [name]);
 
   return [
     data,
