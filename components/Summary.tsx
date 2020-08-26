@@ -11,8 +11,10 @@ export default function Summary(props: ToggleProps & { messages: string[] }) {
   const toggleButton = useToggleButton(props, toggleState, buttonRef);
 
   return (
-    <div className="relative">
-      <div className="pr-8">{props.children}</div>
+    <div className="relative mb-4">
+      <div className="pr-8 whitespace-no-wrap overflow-x-auto">
+        {props.children}
+      </div>
 
       <FocusRing focusRingClass="shadow-outline">
         <button
@@ -30,7 +32,7 @@ export default function Summary(props: ToggleProps & { messages: string[] }) {
           {...toggleButton.buttonProps}
         >
           <svg
-            className="w-5 h-5 m-0.5"
+            className="w-5 h-5 m-0.5 bg-white rounded-full"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             width="20"
