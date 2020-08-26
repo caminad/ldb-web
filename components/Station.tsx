@@ -12,28 +12,30 @@ export default function Station({ name }: { name: string }) {
   const distanceToNow = useDistanceToNow(station?.generatedAt);
 
   return (
-    <div className="py-2 space-y-4">
+    <div className="py-2 space-y-2">
       <Summary messages={station ? station.nrccMessages : []}>
-        <span className="inline-block font-extrabold">
-          Live Arrivals and Departures
-        </span>{' '}
-        <span className="inline-block text-gray-700 text-sm">
-          {distanceToNow && `updated ${distanceToNow}`}
-        </span>
+        <span className="font-extrabold">Arrivals and Departures</span>
+        {!isLoading && (
+          <span className="ml-2 text-xs font-medium tracking-tight text-gray-500">
+            {distanceToNow}
+          </span>
+        )}
       </Summary>
 
-      {station?.busServices && (
-        <ServiceList
-          items={castArray(station.busServices).map((service) => ({
-            ...service,
-            platform: 'bus',
-          }))}
-        />
-      )}
+      <div className="space-y-4">
+        {station?.busServices && (
+          <ServiceList
+            items={castArray(station.busServices).map((service) => ({
+              ...service,
+              platform: 'bus',
+            }))}
+          />
+        )}
 
-      {station?.trainServices && (
-        <ServiceList items={castArray(station.trainServices)} />
-      )}
+        {station?.trainServices && (
+          <ServiceList items={castArray(station.trainServices)} />
+        )}
+      </div>
 
       {isLoading && <PlaceholderList />}
 
@@ -48,7 +50,9 @@ export default function Station({ name }: { name: string }) {
         )}
       </div>
 
-      <PoweredByNationalRailEnquiries />
+      <div className="h-32 flex flex-col items-center justify-center">
+        {station && <PoweredByNationalRailEnquiries />}
+      </div>
     </div>
   );
 }
