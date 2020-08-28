@@ -31,7 +31,7 @@
     "@react-types/checkbox": "^3.1.0",
     "@types/jest": "^26.0.10",
     "@types/lodash": "^4.14.160",
-    "@types/node": "^14.6.0",
+    "@types/node": "^14.6.1",
     "@types/react": "^16.9.48",
     "@typescript-eslint/eslint-plugin": "^3.10.1",
     "@typescript-eslint/parser": "^3.10.1",
