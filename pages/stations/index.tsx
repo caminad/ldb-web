@@ -1,18 +1,67 @@
+import { useButton } from '@react-aria/button';
+import { useCollator } from '@react-aria/i18n';
+import { useSearchField } from '@react-aria/searchfield';
+import { useSearchFieldState } from '@react-stately/searchfield';
+import { AriaButtonProps } from '@react-types/button';
+import { AriaSearchFieldProps } from '@react-types/searchfield';
 import useStationSuggestions from 'hooks/useStationSuggestions';
 import { decodeName, encodeName } from 'models/Station';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useRef } from 'react';
 
-const nameCollator = Intl.Collator('en-GB', {
-  sensitivity: 'base',
-  usage: 'search',
-});
+function BackButton(props: AriaButtonProps) {
+  const buttonRef = useRef<HTMLElement>(null);
+  const { buttonProps } = useButton(props, buttonRef);
+
+  return (
+    <button
+      className="absolute top-0 left-0 h-12 p-2 flex items-center focus:text-blue-500 hover:text-blue-500"
+      {...buttonProps}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-6 h-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        width="24"
+        height="24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M15 19l-7-7 7-7"
+        />
+      </svg>
+    </button>
+  );
+}
+
+function SearchField(props: AriaSearchFieldProps) {
+  const searchFieldState = useSearchFieldState(props);
+  const inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null);
+  const { inputProps } = useSearchField(props, searchFieldState, inputRef);
+
+  return (
+    <input
+      ref={inputRef}
+      className="w-full h-12 appearance-none border border-b-2 border-current p-2 rounded shadow placeholder-current font-medium focus:outline-none focus:text-blue-500"
+      autoCorrect="off"
+      spellCheck="false"
+      {...inputProps}
+    />
+  );
+}
 
 export default function StationsPage() {
   const router = useRouter();
   const searchTerm = decodeName(router.query.search);
   const suggestedNames = useStationSuggestions(searchTerm);
+
+  const { compare } = useCollator({ sensitivity: 'base', usage: 'search' });
 
   return (
     <main className="p-2">
@@ -21,34 +70,26 @@ export default function StationsPage() {
       </Head>
 
       <div className="flex flex-col relative max-w-screen-sm m-auto pl-10">
-        <button
-          className="absolute top-0 left-0 h-12 p-2 flex items-center focus:text-blue-500 hover:text-blue-500"
-          title="Back"
-          onClick={() => router.back()}
-        >
-          <svg
-            className="chevron-left w-6 h-6"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-          <span className="sr-only">Back</span>
-        </button>
+        <BackButton
+          aria-label="Back"
+          onPress={() => {
+            router.back();
+          }}
+        />
 
-        <form
-          onSubmitCapture={(e) => {
-            e.preventDefault();
+        <SearchField
+          placeholder="Search Stations"
+          aria-label="Search"
+          value={searchTerm}
+          autoFocus={true}
+          autoComplete="off"
+          onChange={(value) => {
+            const query = value ? { search: value } : null;
+            router.replace({ query }, undefined, { shallow: true });
+          }}
+          onSubmit={(value) => {
             const matchingName = suggestedNames.find((suggestedName) => {
-              return nameCollator.compare(searchTerm, suggestedName) === 0;
+              return compare(value, suggestedName) === 0;
             });
             if (matchingName) {
               router.push(
@@ -57,23 +98,7 @@ export default function StationsPage() {
               );
             }
           }}
-        >
-          <input
-            className="w-full h-12 appearance-none border border-b-2 border-current p-2 rounded shadow placeholder-current font-medium focus:outline-none focus:text-blue-500"
-            type="search"
-            autoFocus={true}
-            value={searchTerm}
-            onChange={(e) => {
-              const newSearchTerm = e.currentTarget.value;
-              const query = newSearchTerm ? { search: newSearchTerm } : null;
-              router.replace({ query }, undefined, { shallow: true });
-            }}
-            placeholder="Search Stations"
-            autoCorrect="off"
-            autoComplete="off"
-            spellCheck="false"
-          />
-        </form>
+        />
 
         <ul className="mt-2 flex flex-col overflow-auto">
           {suggestedNames.map((suggestedName) => (
