@@ -3,9 +3,15 @@ const plugin = require('tailwindcss/plugin');
 module.exports = {
   future: {
     removeDeprecatedGapUtilities: true,
+    purgeLayersByDefault: true,
   },
 
-  experimental: 'all',
+  experimental: {
+    uniformColorPalette: true,
+    extendedSpacingScale: true,
+    defaultLineHeights: true,
+    extendedFontSizeScale: true,
+  },
 
   purge: ['{components,pages}/**/*.{js,tsx}'],
 
@@ -23,21 +29,25 @@ module.exports = {
 
   variants: {},
 
+  corePlugins: {
+    fontVariantNumeric: false,
+  },
+
   plugins: [
     plugin(function ({ addBase, addUtilities }) {
       addBase({
+        // Enable stylistic alternates for Inter on all elements.
+        // Set explicitly as input elements appear not to inherit this in Firefox.
         '*, ::before, ::after': {
-          fontFeatureSettings:
-            '"tnum" var(--font-feature-tnum, off), "salt" var(--font-feature-salt, off)',
+          fontFeatureSettings: '"salt"',
         },
       });
 
       addUtilities({
-        '.tabular-numbers': {
-          '--font-feature-tnum': 'on',
-        },
-        '.stylistic-alternates': {
-          '--font-feature-salt': 'on',
+        // Uses a simpler implementation than https://github.com/tailwindlabs/tailwindcss/pull/2305
+        // as the void variables in that implementation get purged as of v1.8.2.
+        '.tabular-nums': {
+          fontVariantNumeric: 'tabular-nums',
         },
       });
     }),
