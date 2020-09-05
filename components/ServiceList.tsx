@@ -1,45 +1,84 @@
 import DetailWrapper from 'components/DetailWrapper';
-import Location from 'components/Location';
 import Operator from 'components/Operator';
 import Platform from 'components/Platform';
 import Reason from 'components/Reason';
 import ServiceTime from 'components/ServiceTime';
-import castArray from 'lodash/castArray';
 import Service from 'models/Service';
-import { Fragment } from 'react';
+import { encodeName } from 'models/Station';
+import Link from 'next/link';
+import React, { Fragment, useEffect, useState } from 'react';
+
+// Fix for some external location names differing from the list used by this app.
+function useCRSToLocationNameMap() {
+  const [state, setState] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    import('data/stations.json').then(({ default: stations }) => {
+      const result: Record<string, string> = {};
+      for (const [locationName, crs] of Object.entries(stations)) {
+        result[crs] = locationName;
+      }
+      setState(result);
+    });
+  }, []);
+
+  return state;
+}
 
 export default function ServiceList(props: { items: Service[] }) {
+  const crsToLocationNameMap = useCRSToLocationNameMap();
+
   return (
     <ul className="max-w-full flex flex-col space-y-2 overflow-x-auto">
       {props.items.map((service) => (
         <Fragment key={service.serviceID}>
-          {service.sta && service.origin?.locationName && (
+          {service.sta && (
             <li className="flex flex-col">
               <DetailWrapper isCancelled={service.isCancelled}>
                 <ServiceTime estimate={service.eta}>{service.sta}</ServiceTime>
                 <Platform>{service.platform}</Platform>
                 <span className="font-black text-pink-500">⟵</span>
-                <Location>{service.origin.locationName}</Location>
+                {service.origin.map((origin) => (
+                  <span key={origin.crs}>
+                    <Link
+                      href="/stations/[name]"
+                      as={`/stations/${encodeName(
+                        crsToLocationNameMap[origin.crs] || origin.locationName
+                      )}`}
+                    >
+                      <a className="inline-block font-semibold hover:underline hover:text-blue-500 focus:underline focus:text-blue-500">
+                        {origin.locationName}
+                      </a>
+                    </Link>{' '}
+                  </span>
+                ))}
                 <Operator>{service.operator}</Operator>
               </DetailWrapper>
               <Reason>{service.cancelReason || service.delayReason}</Reason>
             </li>
           )}
-          {service.std && castArray(service.destination)[0]?.locationName && (
+          {service.std && (
             <li className="flex flex-col">
               <DetailWrapper isCancelled={service.isCancelled}>
                 <ServiceTime estimate={service.etd}>{service.std}</ServiceTime>
                 <Platform>{service.platform}</Platform>
                 <span className="font-black text-indigo-500">⟶</span>
-                {castArray(service.destination)
-                  .map((d) => d.locationName)
-                  .map((destination) => (
-                    <Location key={destination}>{destination}</Location>
-                  ))}
-                {!Array.isArray(service.destination) &&
-                  service.destination.via && (
-                    <span> {service.destination.via}</span>
-                  )}
+                {service.destination.map((destination) => (
+                  <span key={destination.crs}>
+                    <Link
+                      href="/stations/[name]"
+                      as={`/stations/${encodeName(
+                        crsToLocationNameMap[destination.crs] ||
+                          destination.locationName
+                      )}`}
+                    >
+                      <a className="inline-block font-semibold hover:underline hover:text-blue-500 focus:underline focus:text-blue-500">
+                        {destination.locationName}
+                      </a>
+                    </Link>{' '}
+                    {destination.via}{' '}
+                  </span>
+                ))}
                 <Operator>{service.operator}</Operator>
               </DetailWrapper>
               <Reason>{service.cancelReason || service.delayReason}</Reason>

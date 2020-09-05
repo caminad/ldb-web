@@ -11,19 +11,20 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps<
-  { name: string | null },
-  { name?: string }
+  { name: string; crs: string } | { name: null; crs: null }
 > = async ({ params }) => {
   const name = decodeName(params?.name);
-  if (name in stations) {
-    return { props: { name } };
+  const crs = (stations as Record<string, string | undefined>)[name];
+  if (crs) {
+    return { props: { name, crs } };
   } else {
-    return { props: { name: null } };
+    return { props: { name: null, crs: null } };
   }
 };
 
 export default function StationPage({
   name,
+  crs,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div className="min-h-screen flex flex-col justify-between items-center p-2 max-w-screen-sm m-auto">
@@ -50,8 +51,8 @@ export default function StationPage({
           <SearchBarLink name={name} />
         </div>
 
-        {name ? (
-          <Station key={name} name={name} />
+        {crs ? (
+          <Station key={name} crs={crs} />
         ) : (
           <div className="py-2">
             <span className="inline-block font-extrabold">Not Found</span>

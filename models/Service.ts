@@ -1,16 +1,21 @@
 export default interface Service {
   serviceID: string;
-  origin: { locationName: string };
-  destination:
-    | { locationName: string; via?: string }
-    | { locationName: string }[];
+  origin: {
+    crs: string;
+    locationName: string;
+  }[];
+  destination: {
+    crs: string;
+    locationName: string;
+    via?: string;
+  }[];
   operator: string;
   sta?: string;
   eta?: string;
   std?: string;
   etd?: string;
   platform?: string;
-  isCancelled?: boolean;
+  isCancelled: boolean;
   delayReason?: string;
   cancelReason?: string;
 }
