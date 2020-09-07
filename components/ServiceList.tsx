@@ -36,8 +36,7 @@ export default function ServiceList(props: { items: Service[] }) {
             <li className="flex flex-col">
               <DetailWrapper isCancelled={service.isCancelled}>
                 <ServiceTime estimate={service.eta}>{service.sta}</ServiceTime>
-                <Platform>{service.platform}</Platform>
-                <span className="font-black text-pink-500">⟵</span>
+                <Platform direction="in">{service.platform}</Platform>
                 {service.origin.map((origin) => (
                   <span key={origin.crs}>
                     <Link
@@ -61,8 +60,7 @@ export default function ServiceList(props: { items: Service[] }) {
             <li className="flex flex-col">
               <DetailWrapper isCancelled={service.isCancelled}>
                 <ServiceTime estimate={service.etd}>{service.std}</ServiceTime>
-                <Platform>{service.platform}</Platform>
-                <span className="font-black text-indigo-500">⟶</span>
+                <Platform direction="out">{service.platform}</Platform>
                 {service.destination.map((destination) => (
                   <span key={destination.crs}>
                     <Link
