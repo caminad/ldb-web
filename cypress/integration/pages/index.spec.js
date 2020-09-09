@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 describe('Landing Page', () => {
   it('Contains “Powered by National Rail Enquiries” attribution link', () => {
     cy.visit('http://localhost:3000');
