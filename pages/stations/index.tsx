@@ -8,8 +8,8 @@ import useStationSuggestions from 'hooks/useStationSuggestions';
 import { decodeName, encodeName } from 'models/Station';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useRef } from 'react';
+import Router, { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
 
 function BackButton(props: AriaButtonProps) {
   const buttonRef = useRef<HTMLElement>(null);
@@ -18,6 +18,7 @@ function BackButton(props: AriaButtonProps) {
   return (
     <button
       className="absolute top-0 left-0 h-12 p-2 flex items-center focus:text-blue-500 hover:text-blue-500"
+      data-cy="BackButton"
       {...buttonProps}
     >
       <svg
@@ -49,6 +50,7 @@ function SearchField(props: AriaSearchFieldProps) {
     <input
       ref={inputRef}
       className="w-full h-12 appearance-none border border-b-2 border-current p-2 rounded shadow placeholder-current font-medium focus:outline-none focus:text-blue-500"
+      data-cy="SearchField"
       autoCorrect="off"
       spellCheck="false"
       {...inputProps}
@@ -57,11 +59,16 @@ function SearchField(props: AriaSearchFieldProps) {
 }
 
 export default function StationsPage() {
-  const router = useRouter();
-  const searchTerm = decodeName(router.query.search);
+  const { query } = useRouter();
+  const [searchTerm, setSearchTerm] = useState(decodeName(query.search));
   const suggestedNames = useStationSuggestions(searchTerm);
 
   const { compare } = useCollator({ sensitivity: 'base', usage: 'search' });
+
+  useEffect(() => {
+    const query = searchTerm ? { search: searchTerm } : null;
+    Router.replace({ query }, undefined, { shallow: true });
+  }, [searchTerm]);
 
   return (
     <main className="p-2">
@@ -73,7 +80,7 @@ export default function StationsPage() {
         <BackButton
           aria-label="Back"
           onPress={() => {
-            router.back();
+            Router.back();
           }}
         />
 
@@ -84,15 +91,14 @@ export default function StationsPage() {
           autoFocus={true}
           autoComplete="off"
           onChange={(value) => {
-            const query = value ? { search: value } : null;
-            router.replace({ query }, undefined, { shallow: true });
+            setSearchTerm(value);
           }}
           onSubmit={(value) => {
             const matchingName = suggestedNames.find((suggestedName) => {
               return compare(value, suggestedName) === 0;
             });
             if (matchingName) {
-              router.push(
+              Router.push(
                 '/stations/[name]',
                 `/stations/${encodeName(matchingName)}`
               );
