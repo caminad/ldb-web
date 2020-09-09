@@ -32,10 +32,14 @@ module.exports = {
   plugins: [
     plugin(function ({ addBase }) {
       addBase({
-        // Enable stylistic alternates for Inter on all elements.
-        // Set explicitly as input elements appear not to inherit this in Firefox.
-        '*, ::before, ::after': {
-          fontFeatureSettings: '"salt"',
+        // Enable some optional stylistic features for Inter.
+        // Some elements do not inherit font-feature-settings in Firefox.
+        'html, button, input, optgroup, select, textarea': {
+          fontFeatureSettings: [
+            '"ss01"', // Stylistic Set 1 "Open Digits"
+            '"ss03"', // Stylistic set 3 "Lower case r curves into round neighbors"
+            '"cv05"', // Character Variant 5 "Lower case l with tail"
+          ].join(', '),
         },
       });
     }),
