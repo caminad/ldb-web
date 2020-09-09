@@ -10,11 +10,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
+      - name: Install dependencies
+        uses: cypress-io/github-action@v2
+        with:
+          # just perform install
+          runTests: false
+
+      - name: Lint
+        run: npx -c 'eslint .'
+
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
+          # we have already installed all dependencies above
+          install: false
           build: npm run build
           start: npm start
 
