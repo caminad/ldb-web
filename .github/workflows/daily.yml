@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.2
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: node ./scripts/get-stations.js > ./data/stations.json
       - uses: peter-evans/create-pull-request@v3
         with:
