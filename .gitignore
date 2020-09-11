@@ -36,3 +36,6 @@ yarn-error.log*
 # cypress artifacts
 cypress/screenshots
 cypress/videos
+
+# lighthouse collect data
+.lighthouseci
