@@ -1,0 +1,14 @@
+name: Deployment
+
+on: deployment_status
+
+jobs:
+  Lighthouse:
+    if: github.event.deployment_status.state == "success"
+    runs-on: ubuntu-latest
+    steps:
+      - run: npx -p @lhci/cli lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          LHCI_TOKEN: ${{ secrets.LHCI_TOKEN }}
+          TARGET_URL: ${{ github.event.deployment_status.target_url }}

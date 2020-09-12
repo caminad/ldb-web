@@ -1,11 +1,13 @@
+const targetURL = process.env.TARGET_URL || 'http://localhost:3000';
+
 module.exports = {
   ci: {
     collect: {
       startServerCommand: 'npm start',
       url: [
-        'http://localhost:3000',
-        'http://localhost:3000/stations',
-        'http://localhost:3000/stations/London_Euston',
+        `${targetURL}`,
+        `${targetURL}/stations`,
+        `${targetURL}/stations/London_Euston`,
       ],
     },
     upload: {
