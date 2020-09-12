@@ -39,3 +39,11 @@ cypress/videos
 
 # lighthouse collect data
 .lighthouseci
+
+# yarn
+.yarn/*
+!.yarn/cache
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
