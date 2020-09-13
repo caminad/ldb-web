@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "cypress": "cypress open"
+    "cypress": "cypress open",
+    "generate:client": "genql --esm --endpoint https://ldb-graphql.vercel.app/api --output generated/client"
   },
   "dependencies": {
+    "@genql/runtime": "^2.1.0",
     "@next/bundle-analyzer": "^9.5.3",
     "@react-aria/button": "^3.2.1",
     "@react-aria/focus": "^3.2.1",
@@ -30,6 +32,7 @@
     "tailwindcss": "^1.8.7"
   },
   "devDependencies": {
+    "@genql/cli": "^2.1.0",
     "@lhci/cli": "^0.5.0",
     "@types/babel__core": "^7.1.9",
     "@types/node": "^14.10.0",
