@@ -1,77 +1,51 @@
-import Service from 'models/Service';
-import Station from 'models/Station';
+import {
+  createClient,
+  everything,
+  GetStationBoardResult,
+  Scalars,
+  ServiceItem,
+} from 'generated/client';
 import { DispatchWithoutAction, useReducer, useRef } from 'react';
 import useSWR from 'swr';
 
 const LIMIT_STEP = 20;
 
-async function fetcher(crs: string, numRows: number) {
-  const res = await fetch('https://ldb-graphql.vercel.app/api', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      query: `query ($crs: CRS!, $numRows: PositiveInt) {
-        station(crs: $crs, numRows: $numRows) {
-          crs
-          locationName
-          generatedAt
-          nrccMessages
-          platformAvailable
-          trainServices {
-            serviceID
-            origin {
-              crs
-              locationName
-            }
-            destination {
-              crs
-              locationName
-              via
-            }
-            operator
-            sta
-            eta
-            std
-            etd
-            platform
-            isCancelled
-            delayReason
-            cancelReason
-          }
-          busServices {
-            serviceID
-            origin {
-              crs
-              locationName
-            }
-            destination {
-              crs
-              locationName
-              via
-            }
-            operator
-            sta
-            eta
-            std
-            etd
-          }
-        }
-      }`,
-      variables: { crs, numRows },
-    }),
+const client = createClient();
+
+async function fetcher(crs: Scalars['CRS'], numRows: Scalars['PositiveInt']) {
+  const { station } = await client.query({
+    station: [
+      { crs, numRows },
+      {
+        ...everything,
+        trainServices: {
+          ...everything,
+          origin: { ...everything },
+          destination: { ...everything },
+        },
+        busServices: {
+          ...everything,
+          origin: { ...everything },
+          destination: { ...everything },
+        },
+        ferryServices: {
+          ...everything,
+          origin: { ...everything },
+          destination: { ...everything },
+        },
+      },
+    ],
   });
-  const { data, error } = await res.json();
-  if (error) {
-    throw error;
-  }
-  return data.station;
+
+  return station;
 }
 
-function countServices(...items: (Service | Service[] | undefined)[]): number {
-  return ([] as unknown[]).concat(...items.filter(Boolean)).length;
+function allServices(station: GetStationBoardResult) {
+  return ([] as ServiceItem[]).concat(
+    station.trainServices || [],
+    station.busServices || [],
+    station.ferryServices || []
+  );
 }
 
 function useDefined<T>(value: T | undefined): T | undefined {
@@ -87,7 +61,7 @@ function useDefined<T>(value: T | undefined): T | undefined {
 export default function useStation(
   crs: string
 ): [
-  station: Station | undefined,
+  station: GetStationBoardResult | undefined,
   raiseLimit: false | DispatchWithoutAction,
   isLoading: boolean
 ] {
@@ -96,15 +70,13 @@ export default function useStation(
     LIMIT_STEP
   );
 
-  const { data } = useSWR<Station>([crs, limit], {
-    fetcher,
+  const { data } = useSWR([crs, limit], fetcher, {
     refreshInterval: 25000,
   });
 
   const station = useDefined(data);
 
-  const canRaiseLimit =
-    countServices(station?.busServices, station?.trainServices) === limit;
+  const canRaiseLimit = station ? allServices(station).length === limit : false;
 
   return [station, canRaiseLimit && raiseLimit, !data];
 }

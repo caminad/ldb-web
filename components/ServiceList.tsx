@@ -3,7 +3,7 @@ import Operator from 'components/Operator';
 import Platform from 'components/Platform';
 import Reason from 'components/Reason';
 import ServiceTime from 'components/ServiceTime';
-import Service from 'models/Service';
+import { ServiceItem } from 'generated/client';
 import { encodeName } from 'models/Station';
 import Link from 'next/link';
 import React, { Fragment, useEffect, useState } from 'react';
@@ -25,7 +25,7 @@ function useCRSToLocationNameMap() {
   return state;
 }
 
-export default function ServiceList(props: { items: Service[] }) {
+export default function ServiceList(props: { items: ServiceItem[] }) {
   const crsToLocationNameMap = useCRSToLocationNameMap();
 
   return (
@@ -37,7 +37,7 @@ export default function ServiceList(props: { items: Service[] }) {
               <DetailWrapper isCancelled={service.isCancelled}>
                 <ServiceTime estimate={service.eta}>{service.sta}</ServiceTime>
                 <Platform direction="in">{service.platform}</Platform>
-                {service.origin.map((origin) => (
+                {service.origin?.map((origin) => (
                   <span key={origin.crs}>
                     <Link
                       href="/stations/[name]"
@@ -61,7 +61,7 @@ export default function ServiceList(props: { items: Service[] }) {
               <DetailWrapper isCancelled={service.isCancelled}>
                 <ServiceTime estimate={service.etd}>{service.std}</ServiceTime>
                 <Platform direction="out">{service.platform}</Platform>
-                {service.destination.map((destination) => (
+                {service.destination?.map((destination) => (
                   <span key={destination.crs}>
                     <Link
                       href="/stations/[name]"
