@@ -1,9 +1,15 @@
 import PlaceholderList from 'components/PlaceholderList';
 import PoweredByNationalRailEnquiries from 'components/PoweredByNationalRailEnquiries';
-import ServiceList from 'components/ServiceList';
 import Summary from 'components/Summary';
 import useDistanceToNow from 'hooks/useDistanceToNow';
 import useStation from 'hooks/useStation';
+import dynamic from 'next/dynamic';
+
+const ServiceList = dynamic(() => import('components/ServiceList'), {
+  loading() {
+    return <PlaceholderList />;
+  },
+});
 
 export default function Station({ crs }: { crs: string }) {
   const [station, raiseLimit, isLoading] = useStation(crs);
@@ -11,7 +17,7 @@ export default function Station({ crs }: { crs: string }) {
 
   return (
     <div className="py-2 space-y-2">
-      <Summary messages={station?.nrccMessages || []}>
+      <Summary messages={station?.nrccMessages}>
         <span className="font-extrabold">Arrivals and Departures</span>
         {!isLoading && (
           <span className="ml-2 text-xs font-medium tracking-tight text-gray-500">
