@@ -3,7 +3,39 @@ import { FocusRing } from '@react-aria/focus';
 import { useToggleState } from '@react-stately/toggle';
 import { ToggleProps } from '@react-types/checkbox';
 import clsx from 'clsx';
+import DOMPurify from 'dompurify';
 import { useRef } from 'react';
+
+function Message(props: { rawHTML: string }) {
+  const dirty = props.rawHTML
+    .replace(
+      // Add styling to anchors.
+      /<[a] /gi,
+      '$&class="font-medium text-blue-500 hover:underline" '
+    )
+    .replace(
+      // Normalize National Rail URLs to avoid insecure redirect.
+      /\bhttps?:\/\/(?:www\.)?nationalrail.co.uk\//gi,
+      'https://www.nationalrail.co.uk/'
+    );
+
+  const __html = DOMPurify.sanitize(dirty, {
+    ALLOWED_TAGS: ['a', 'p'],
+    ALLOWED_ATTR: ['class', 'href'],
+  });
+
+  return <li className="mt-2" dangerouslySetInnerHTML={{ __html }} />;
+}
+
+function Messages(props: { items: string[] }) {
+  return (
+    <ul className="text-gray-700 text-sm">
+      {props.items.map((rawHTML, index) => (
+        <Message key={index} rawHTML={rawHTML} />
+      ))}
+    </ul>
+  );
+}
 
 export default function Summary(props: ToggleProps & { messages: string[] }) {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -48,16 +80,7 @@ export default function Summary(props: ToggleProps & { messages: string[] }) {
         </button>
       </FocusRing>
 
-      <ul
-        className="text-gray-700 text-sm"
-        hidden={!toggleState.isSelected || props.messages.length === 0}
-      >
-        {props.messages.map((message, index) => (
-          <li key={index} className="mt-2 whitespace-pre-line">
-            {message}
-          </li>
-        ))}
-      </ul>
+      {toggleState.isSelected && <Messages items={props.messages} />}
     </div>
   );
 }
