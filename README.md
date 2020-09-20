@@ -11,8 +11,8 @@ View upcoming arrivals, departures, delays and cancellations for UK train statio
 ## Development
 
 ```
-npm install
-npm run dev
+yarn
+yarn dev
 ```
 
 ## License
