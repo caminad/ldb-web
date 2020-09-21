@@ -9,8 +9,7 @@ module.exports = {
       ],
     },
     upload: {
-      target: 'lhci',
-      serverBaseUrl: 'https://kitibyte-lhci.herokuapp.com',
+      target: 'temporary-public-storage',
     },
   },
 };
