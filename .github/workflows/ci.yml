@@ -7,28 +7,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.2
-      - run: yarn install --immutable
+      - run: yarn install --frozen-lockfile
       - run: yarn eslint .
 
   TypeScript:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.2
-      - run: yarn install --immutable
+      - run: yarn install --frozen-lockfile
       - run: yarn tsc -p .
 
   Cypress:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.2
-      - run: yarn install --immutable
       - uses: actions/cache@v2.1.1
         with:
           path: ${{ github.workspace }}/.next/cache
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
       - uses: cypress-io/github-action@v2
         with:
-          install: false
           build: yarn build
           start: yarn start
       - if: always()
@@ -44,12 +42,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.2
-      - run: yarn install --immutable
       - uses: actions/cache@v2.1.1
         with:
           path: ${{ github.workspace }}/.next/cache
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
+      - run: yarn install --frozen-lockfile
       - run: yarn build
-      - run: yarn dlx -q -p @lhci/cli lhci autorun
+      - run: npx -q -p @lhci/cli lhci autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
