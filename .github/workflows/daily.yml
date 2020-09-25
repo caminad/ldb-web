@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.2
-      - run: yarn install --immutable
+      - run: yarn install --frozen-lockfile
       - run: node ./scripts/get-stations.js > ./data/stations.json
       - uses: peter-evans/create-pull-request@v3
         with:

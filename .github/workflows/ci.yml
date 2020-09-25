@@ -7,30 +7,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.2
-      - run: yarn install --immutable
-      - run: yarn eslint .
 
-  TypeScript:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2.3.2
-      - run: yarn install --immutable
-      - run: yarn tsc -p .
+      - id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2.1.1
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - run: yarn install --frozen-lockfile
+
+      - run: yarn eslint .
 
   Cypress:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.2
-      - run: yarn install --immutable
+
       - uses: actions/cache@v2.1.1
         with:
           path: ${{ github.workspace }}/.next/cache
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-
+
       - uses: cypress-io/github-action@v2
         with:
-          install: false
           build: yarn build
           start: yarn start
+
       - if: always()
         uses: actions/upload-artifact@v2.1.4
         with:
@@ -44,12 +52,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.2
-      - run: yarn install --immutable
+
+      - id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2.1.1
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - run: yarn install --frozen-lockfile
+
       - uses: actions/cache@v2.1.1
         with:
           path: ${{ github.workspace }}/.next/cache
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-
+
       - run: yarn build
-      - run: yarn dlx -q -p @lhci/cli lhci autorun
+
+      - run: npx -q -p @lhci/cli lhci autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
