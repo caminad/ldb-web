@@ -6,7 +6,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "cypress": "cypress open",
     "generate:client": "genql --esm --endpoint https://ldb-graphql.vercel.app/api --output generated/client"
   },
   "dependencies": {
