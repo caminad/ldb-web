@@ -1372,6 +1372,13 @@
   dependencies:
     "@react-types/shared" "^3.2.0"
 
+"@react-types/button@^3.2.1":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@react-types/button/-/button-3.2.1.tgz#47170f8d7107115380dfd54ee3f699d3bef121de"
+  integrity sha512-k4pyQ01Unkr+Jx5tGESSsbqDXID7s/sEXZbrT+JPx/3Ot4Du86mGjlDIOChd7Iq1koGBirJuGY8X5nk4zCUvdg==
+  dependencies:
+    "@react-types/shared" "^3.2.1"
+
 "@react-types/checkbox@^3.1.0", "@react-types/checkbox@^3.2.0":
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/@react-types/checkbox/-/checkbox-3.2.0.tgz#a77dd9378449760494ce7cf56492aa61b6357bc3"
@@ -1397,6 +1404,11 @@
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/@react-types/shared/-/shared-3.2.0.tgz#531c320e6b8f01f614336c14cee50ecf9fca4a4d"
   integrity sha512-0oVULza+qc8+j7I9OB74FVjbrH6JzUAYDAkTYXbsaPt/w4quAlgd4ADy9yxIVYyN1GCXp/z0AUuocaYDHA8O6Q==
+
+"@react-types/shared@^3.2.1":
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@react-types/shared/-/shared-3.2.1.tgz#cbcffec02a7592f019916e4bd0807950a1376bcf"
+  integrity sha512-Yi+zB+wvIGrxomjG7JZWsOPm8/tKPBtEsJI4cS2QbSho/bQWsw6xufJ6YlXxmx4BiBcktkp5VeP43E5nWqMQ5w==
 
 "@react-types/textfield@^3.1.0", "@react-types/textfield@^3.2.0":
   version "3.2.0"
