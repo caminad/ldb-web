@@ -18,7 +18,7 @@
     "@react-stately/searchfield": "^3.1.0",
     "@react-stately/toggle": "^3.2.0",
     "@react-types/button": "^3.2.0",
-    "@react-types/checkbox": "^3.2.0",
+    "@react-types/checkbox": "^3.2.1",
     "@react-types/searchfield": "^3.1.0",
     "clsx": "^1.1.1",
     "csv-parse": "^4.12.0",
