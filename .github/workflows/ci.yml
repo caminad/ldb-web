@@ -40,7 +40,7 @@ jobs:
           start: yarn start
 
       - if: always()
-        uses: actions/upload-artifact@v2.1.4
+        uses: actions/upload-artifact@v2.2.0
         with:
           name: cypress
           path: |
