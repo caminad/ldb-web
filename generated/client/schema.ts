@@ -4,7 +4,6 @@ export type Scalars = {
     DateTime: any,
     String: string,
     CRS: any,
-    Message: any,
     Boolean: boolean,
     Int: number,
     PositiveInt: any,
@@ -32,7 +31,7 @@ export interface GetStationBoardResult {
     /** If a filter was requested, the type of filter. */
     filterType?: FilterType
     /** An optional list of textual messages that should be displayed with the station board. The message may include embedded and xml encoded HTML-like hyperlinks and paragraphs. The messages are typically used to display important disruption information that applies to the location that the station board was for. Any embedded <p> tags are used to force a new-line in the output. Embedded <a> tags allow links to external web pages that may provide more information. Output channels that do not support HTML should strip out the <a> tags and just leave the enclosed text. */
-    nrccMessages?: Scalars['Message'][]
+    nrccMessages?: Scalars['String'][]
     /** An optional value that indicates if platform information is available. If this value is present with the value `true` then platform information will be returned in the service lists. If this value is not present, or has the value `false`, then the platform "heading" should be suppressed in the user interface for this station board. */
     platformAvailable: Scalars['Boolean']
     /** An optional value that indicates if services are currently available for this station board. If this value is present with the value `false` then no services will be returned in the service lists. This value may be set, for example, if access to a station has been closed to the public at short notice, even though the scheduled services are still running. It would be usual in such cases for one of the nrccMessages to describe why the list of services has been suppressed. */
@@ -406,7 +405,7 @@ filtercrs: ({get: (request?: boolean|number, defaultValue?: (Scalars['String'] |
 filterType: ({get: (request?: boolean|number, defaultValue?: (FilterType | undefined)) => Promise<(FilterType | undefined)>}),
     
 /** An optional list of textual messages that should be displayed with the station board. The message may include embedded and xml encoded HTML-like hyperlinks and paragraphs. The messages are typically used to display important disruption information that applies to the location that the station board was for. Any embedded <p> tags are used to force a new-line in the output. Embedded <a> tags allow links to external web pages that may provide more information. Output channels that do not support HTML should strip out the <a> tags and just leave the enclosed text. */
-nrccMessages: ({get: (request?: boolean|number, defaultValue?: (Scalars['Message'][] | undefined)) => Promise<(Scalars['Message'][] | undefined)>}),
+nrccMessages: ({get: (request?: boolean|number, defaultValue?: (Scalars['String'][] | undefined)) => Promise<(Scalars['String'][] | undefined)>}),
     
 /** An optional value that indicates if platform information is available. If this value is present with the value `true` then platform information will be returned in the service lists. If this value is not present, or has the value `false`, then the platform "heading" should be suppressed in the user interface for this station board. */
 platformAvailable: ({get: (request?: boolean|number, defaultValue?: Scalars['Boolean']) => Promise<Scalars['Boolean']>}),
@@ -445,7 +444,7 @@ filtercrs: ({get: (request?: boolean|number, defaultValue?: (Scalars['String'] |
 filterType: ({get: (request?: boolean|number, defaultValue?: (FilterType | undefined)) => Observable<(FilterType | undefined)>}),
     
 /** An optional list of textual messages that should be displayed with the station board. The message may include embedded and xml encoded HTML-like hyperlinks and paragraphs. The messages are typically used to display important disruption information that applies to the location that the station board was for. Any embedded <p> tags are used to force a new-line in the output. Embedded <a> tags allow links to external web pages that may provide more information. Output channels that do not support HTML should strip out the <a> tags and just leave the enclosed text. */
-nrccMessages: ({get: (request?: boolean|number, defaultValue?: (Scalars['Message'][] | undefined)) => Observable<(Scalars['Message'][] | undefined)>}),
+nrccMessages: ({get: (request?: boolean|number, defaultValue?: (Scalars['String'][] | undefined)) => Observable<(Scalars['String'][] | undefined)>}),
     
 /** An optional value that indicates if platform information is available. If this value is present with the value `true` then platform information will be returned in the service lists. If this value is not present, or has the value `false`, then the platform "heading" should be suppressed in the user interface for this station board. */
 platformAvailable: ({get: (request?: boolean|number, defaultValue?: Scalars['Boolean']) => Observable<Scalars['Boolean']>}),
