@@ -1132,6 +1132,22 @@
     ws "^6.1.4"
     zen-observable-ts "^0.8.21"
 
+"@genql/runtime@^2.3.3":
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/@genql/runtime/-/runtime-2.3.3.tgz#038104fb06ff4f41863e99bfcfff48d91fcaf571"
+  integrity sha512-5dziwBxqBen++/amxV5yy498wu7F3F0CmbtawcIm6bDfzn0mOS5UwNMZcdTBscWzZmP8GIAzmaqWtsdPjxaBZA==
+  dependencies:
+    "@types/qs" "^6.9.0"
+    "@types/ws" "^6.0.1"
+    graphql-query-batcher "^1.0.1"
+    isomorphic-unfetch "^3.0.0"
+    lodash "^4.17.20"
+    subscriptions-transport-ws "^0.9.16"
+    tslib "^2.0.0"
+    utility-types "^3.10.0"
+    ws "^6.1.4"
+    zen-observable-ts "^0.8.21"
+
 "@graphql-tools/graphql-file-loader@^6.0.10":
   version "6.2.3"
   resolved "https://registry.yarnpkg.com/@graphql-tools/graphql-file-loader/-/graphql-file-loader-6.2.3.tgz#be82b56a7585c24b0d8fef7570707d6e7df7c0ee"
