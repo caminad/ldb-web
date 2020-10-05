@@ -15,7 +15,7 @@
     "@react-aria/focus": "^3.2.1",
     "@react-aria/i18n": "^3.1.1",
     "@react-aria/searchfield": "^3.1.0",
-    "@react-stately/searchfield": "^3.1.0",
+    "@react-stately/searchfield": "^3.1.1",
     "@react-stately/toggle": "^3.2.0",
     "@react-types/button": "^3.2.0",
     "@react-types/checkbox": "^3.2.0",
