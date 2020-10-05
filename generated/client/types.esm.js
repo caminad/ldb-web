@@ -5,13 +5,12 @@ export default {
         4,
         5,
         6,
-        7,
-        9,
+        8,
+        13,
         14,
         15,
         16,
-        17,
-        18
+        17
     ],
     "types": {
         "Query": {
@@ -23,7 +22,7 @@ export default {
                         "CRS!"
                     ],
                     "numRows": [
-                        16
+                        15
                     ],
                     "filterCrs": [
                         4
@@ -32,10 +31,10 @@ export default {
                         5
                     ],
                     "timeOffset": [
-                        17
+                        16
                     ],
                     "timeWindow": [
-                        18
+                        17
                     ]
                 }
             ],
@@ -63,22 +62,22 @@ export default {
                 5
             ],
             "nrccMessages": [
-                6
+                3
             ],
             "platformAvailable": [
-                7
+                6
             ],
             "areServicesAvailable": [
-                7
+                6
             ],
             "trainServices": [
-                8
+                7
             ],
             "busServices": [
-                8
+                7
             ],
             "ferryServices": [
-                8
+                7
             ],
             "__typename": [
                 3
@@ -88,7 +87,6 @@ export default {
         "String": {},
         "CRS": {},
         "FilterType": {},
-        "Message": {},
         "Boolean": {},
         "ServiceItem": {
             "sta": [
@@ -113,25 +111,25 @@ export default {
                 3
             ],
             "isCircularRoute": [
-                7
+                6
             ],
             "isCancelled": [
-                7
+                6
             ],
             "filterLocationCancelled": [
-                7
+                6
             ],
             "serviceType": [
                 3
             ],
             "length": [
-                9
+                8
             ],
             "detachFront": [
-                7
+                6
             ],
             "isReverseFormation": [
-                7
+                6
             ],
             "cancelReason": [
                 3
@@ -149,19 +147,19 @@ export default {
                 3
             ],
             "origin": [
-                10
+                9
             ],
             "destination": [
-                10
+                9
             ],
             "currentOrigins": [
-                10
+                9
             ],
             "currentDestinations": [
-                10
+                9
             ],
             "formation": [
-                11
+                10
             ],
             "__typename": [
                 3
@@ -182,7 +180,7 @@ export default {
                 3
             ],
             "assocIsCancelled": [
-                7
+                6
             ],
             "__typename": [
                 3
@@ -190,10 +188,10 @@ export default {
         },
         "FormationData": {
             "avgLoading": [
-                9
+                8
             ],
             "coaches": [
-                12
+                11
             ],
             "__typename": [
                 3
@@ -204,13 +202,13 @@ export default {
                 3
             ],
             "loading": [
-                9
+                8
             ],
             "number": [
                 3
             ],
             "toilet": [
-                13
+                12
             ],
             "__typename": [
                 3
@@ -218,10 +216,10 @@ export default {
         },
         "ToiletAvailabilityType": {
             "status": [
-                14
+                13
             ],
             "value": [
-                15
+                14
             ],
             "__typename": [
                 3

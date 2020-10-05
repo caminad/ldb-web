@@ -16,6 +16,7 @@
     "date-fns": "^2.16.1",
     "dompurify": "^2.1.1",
     "fuzzysort": "^1.1.4",
+    "graphql": "^15.3.0",
     "next": "^9.5.3",
     "react": "16.13.1",
     "react-aria": "^3.0.0",
@@ -25,7 +26,7 @@
     "tailwindcss": "^1.8.10"
   },
   "devDependencies": {
-    "@genql/cli": "^2.1.0",
+    "@genql/cli": "^2.3.3",
     "@types/babel__core": "^7.1.10",
     "@types/dompurify": "^2.0.4",
     "@types/node": "^14.10.3",
