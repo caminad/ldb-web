@@ -1,8 +1,3 @@
-import { useButton } from '@react-aria/button';
-import { useCollator } from '@react-aria/i18n';
-import { useSearchField } from '@react-aria/searchfield';
-import { useSearchFieldState } from '@react-stately/searchfield';
-import { AriaButtonProps } from '@react-types/button';
 import { AriaSearchFieldProps } from '@react-types/searchfield';
 import useStationSuggestions from 'hooks/useStationSuggestions';
 import { decodeName, encodeName } from 'models/Station';
@@ -10,10 +5,20 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Router, { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import { useButton, useCollator, useSearchField } from 'react-aria';
+import { useSearchFieldState } from 'react-stately';
 
-function BackButton(props: AriaButtonProps) {
+function BackButton() {
   const buttonRef = useRef<HTMLElement>(null);
-  const { buttonProps } = useButton(props, buttonRef);
+  const { buttonProps } = useButton(
+    {
+      'aria-label': 'Back',
+      onPress() {
+        Router.back();
+      },
+    },
+    buttonRef
+  );
 
   return (
     <button
@@ -77,12 +82,7 @@ export default function StationsPage() {
       </Head>
 
       <div className="flex flex-col relative max-w-screen-sm m-auto pl-10">
-        <BackButton
-          aria-label="Back"
-          onPress={() => {
-            Router.back();
-          }}
-        />
+        <BackButton />
 
         <SearchField
           placeholder="Search Stations"
