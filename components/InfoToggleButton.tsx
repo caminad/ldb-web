@@ -1,16 +1,15 @@
-import { useToggleButton } from '@react-aria/button';
-import { FocusRing } from '@react-aria/focus';
-import { ToggleState } from '@react-stately/toggle';
-import { AriaToggleButtonProps } from '@react-types/button';
 import clsx from 'clsx';
 import { useRef } from 'react';
+import { FocusRing, useToggleButton } from 'react-aria';
+import { ToggleState } from 'react-stately';
 
 export default function InfoToggleButton({
   toggleState,
-  ...props
-}: { toggleState: ToggleState } & AriaToggleButtonProps) {
+}: {
+  toggleState: ToggleState;
+}) {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const toggleButton = useToggleButton(props, toggleState, buttonRef);
+  const toggleButton = useToggleButton({}, toggleState, buttonRef);
 
   return (
     <FocusRing focusRingClass="shadow-outline">
