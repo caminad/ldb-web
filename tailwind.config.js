@@ -4,12 +4,13 @@ module.exports = {
   future: {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true,
+    defaultLineHeights: true,
+    standardFontWeights: true,
   },
 
   experimental: {
     uniformColorPalette: true,
     extendedSpacingScale: true,
-    defaultLineHeights: true,
     extendedFontSizeScale: true,
   },
 
