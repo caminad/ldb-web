@@ -9,7 +9,7 @@ function Message(props: { rawHTML: string }) {
     )
     .replace(
       // Normalize National Rail URLs to avoid insecure redirect.
-      /\bhttps?:\/\/(?:www\.)?nationalrail.co.uk\//gi,
+      /\bhttps?:\/\/(?:www\.)?nationalrail\.co\.uk\//gi,
       'https://www.nationalrail.co.uk/'
     );
 
