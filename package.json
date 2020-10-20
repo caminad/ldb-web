@@ -22,7 +22,7 @@
     "react-aria": "^3.0.0",
     "react-dom": "16.14.0",
     "react-stately": "^3.0.1",
-    "swr": "^0.3.5",
+    "swr": "^0.3.6",
     "tailwindcss": "^1.9.4"
   },
   "devDependencies": {
