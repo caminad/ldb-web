@@ -7,7 +7,7 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import Head from 'next/head';
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  return { fallback: 'unstable_blocking', paths: [] };
+  return { fallback: 'blocking', paths: [] };
 };
 
 export const getStaticProps: GetStaticProps<

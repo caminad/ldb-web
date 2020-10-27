@@ -40,8 +40,7 @@ export default function ServiceList(props: { items: ServiceItem[] }) {
                 {service.origin?.map((origin) => (
                   <span key={origin.crs}>
                     <Link
-                      href="/stations/[name]"
-                      as={`/stations/${encodeName(
+                      href={`/stations/${encodeName(
                         crsToLocationNameMap[origin.crs] || origin.locationName
                       )}`}
                     >
@@ -64,8 +63,7 @@ export default function ServiceList(props: { items: ServiceItem[] }) {
                 {service.destination?.map((destination) => (
                   <span key={destination.crs}>
                     <Link
-                      href="/stations/[name]"
-                      as={`/stations/${encodeName(
+                      href={`/stations/${encodeName(
                         crsToLocationNameMap[destination.crs] ||
                           destination.locationName
                       )}`}
