@@ -109,10 +109,7 @@ export default function StationsPage() {
         <ul className="mt-2 flex flex-col overflow-auto">
           {suggestedNames.map((suggestedName) => (
             <li className="p-1" key={suggestedName}>
-              <Link
-                href="/stations/[name]"
-                as={`/stations/${encodeName(suggestedName)}`}
-              >
+              <Link href={`/stations/${encodeName(suggestedName)}`}>
                 <a className="block p-1 whitespace-no-wrap font-medium hover:underline hover:text-blue-500 focus:underline focus:text-blue-500">
                   {suggestedName}
                 </a>
