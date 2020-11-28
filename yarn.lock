@@ -1407,10 +1407,10 @@
     "@react-types/shared" "^3.3.0"
     intl-messageformat "^2.2.0"
 
-"@react-aria/interactions@^3.2.1", "@react-aria/interactions@^3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@react-aria/interactions/-/interactions-3.3.0.tgz#76ce163dba7432d6c2691d3e9ca21bf5f4b40bcf"
-  integrity sha512-SDFl/aJZ21UTXUfneKa622wGQq9lxBsHBZYVEiGrrKGrfkSAx+2mhOfxX9ep9kebLSvAHgRDL9Hvi01V0oYN2Q==
+"@react-aria/interactions@^3.2.1", "@react-aria/interactions@^3.3.0", "@react-aria/interactions@^3.3.1":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@react-aria/interactions/-/interactions-3.3.1.tgz#5eb575122f1244426386dbb603b7bd0efabe75dd"
+  integrity sha512-9/P4pt4HvpA0RXG+qWSqVhptbQ1nmOAU47krJFLPZF5gAJRfQP4h/lLqK3vcIL2/Zr7TUpdcX8WtzDXo3qsMjA==
   dependencies:
     "@babel/runtime" "^7.6.2"
     "@react-aria/utils" "^3.4.0"
@@ -6999,10 +6999,10 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-aria@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/react-aria/-/react-aria-3.1.0.tgz#21d8b418ff9d0f39e927a92ba5021294f7c4e9e7"
-  integrity sha512-ud8UhM7wOSdW4vmn98Mhrh5f5uCvQr2eQcmGKMnsVoricwmqLMB+QILpUgjLBrjLL2b2KzTHJTAY0HpAZM/6ZQ==
+react-aria@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-aria/-/react-aria-3.1.1.tgz#699acea45ec56a138ea1929ec44b0926281cc384"
+  integrity sha512-QK5vI0VLx4uL5fy/TZJJrh/AEFpczb4agb0WLDUy7vJR+Wh/4QF0u5e5s7Ii4v3I6QsVIPl2xmXfatDirwHxIA==
   dependencies:
     "@react-aria/breadcrumbs" "^3.1.1"
     "@react-aria/button" "^3.2.2"
@@ -7010,7 +7010,7 @@ react-aria@^3.1.0:
     "@react-aria/dialog" "^3.1.2"
     "@react-aria/focus" "^3.2.3"
     "@react-aria/i18n" "^3.1.3"
-    "@react-aria/interactions" "^3.3.0"
+    "@react-aria/interactions" "^3.3.1"
     "@react-aria/label" "^3.1.1"
     "@react-aria/link" "^3.1.2"
     "@react-aria/listbox" "^3.2.2"
