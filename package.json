@@ -23,7 +23,7 @@
     "react-dom": "17.0.1",
     "react-stately": "^3.0.1",
     "swr": "^0.3.9",
-    "tailwindcss": "^1.9.6"
+    "tailwindcss": "^2.0.1"
   },
   "devDependencies": {
     "@genql/cli": "^2.3.3",
