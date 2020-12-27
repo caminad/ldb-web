@@ -1,3 +1,13 @@
+/*
+ Enable some optional stylistic features for Inter.
+ Some elements do not inherit font-feature-settings in Firefox.
+ - Stylistic Set 1 "Open Digits"
+ - Stylistic set 3 "Lower case r curves into round neighbors"
+ - Character Variant 5 "Lower case l with tail"
+ */
+html, button, input, optgroup, select, textarea {
+  font-feature-settings: "ss01", "ss03", "cv05";
+}
 /* extra */
 @font-face {
   font-family: 'Inter var';

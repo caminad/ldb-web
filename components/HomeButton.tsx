@@ -4,11 +4,11 @@ export default function HomeButton() {
   return (
     <Link href="/">
       <a
-        className="absolute top-0 left-0 h-12 p-2 flex items-center focus:text-blue-500 hover:text-blue-500"
+        className="absolute top-0 left-0 flex items-center h-12 p-2 focus:text-blue-500 hover:text-blue-500"
         title="Home"
       >
         <svg
-          className="home w-6 h-6"
+          className="w-6 h-6"
           width="24"
           height="24"
           viewBox="0 0 24 24"
