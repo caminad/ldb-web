@@ -2,9 +2,9 @@ describe('Stations Search Page', () => {
   it('Searches for a station', () => {
     cy.visit('http://localhost:3000/stations')
       .get('[data-cy=SearchField]')
-      .should('be.focused');
-
-    cy.focused().type('glasgow').url().should('contain', 'glasgow');
+      .type('glasgow')
+      .url()
+      .should('contain', 'glasgow');
 
     cy.contains('Glasgow Queen Street')
       .click()
