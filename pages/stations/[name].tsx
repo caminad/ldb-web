@@ -27,13 +27,13 @@ export default function StationPage({
   crs,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <div className="min-h-screen flex flex-col justify-between items-center p-2 max-w-screen-sm m-auto">
+    <div className="flex flex-col items-center justify-between max-w-screen-sm min-h-screen p-2 m-auto">
       {name ? (
         <Head>
-          <title>{name}</title>
+          <title>{name} Live Departure Boards</title>
           <meta
             name="description"
-            content={`Live Arrivals and Departures at ${name}.`}
+            content={`Live arrivals and departures via ${name}, powered by National Rail Enquiries.`}
           />
           <link rel="icon" href="/favicon.ico" />
         </Head>
@@ -46,7 +46,7 @@ export default function StationPage({
       )}
 
       <main className="w-full space-y-2">
-        <div className="flex flex-col relative max-w-screen-sm m-auto pl-10">
+        <div className="relative flex flex-col max-w-screen-sm pl-10 m-auto">
           <HomeButton />
           <SearchBarLink name={name} />
         </div>

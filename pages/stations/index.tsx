@@ -22,7 +22,7 @@ function BackButton() {
 
   return (
     <button
-      className="absolute top-0 left-0 h-12 p-2 flex items-center focus:text-blue-500 hover:text-blue-500"
+      className="absolute top-0 left-0 flex items-center h-12 p-2 focus:text-blue-500 hover:text-blue-500"
       data-cy="BackButton"
       {...buttonProps}
     >
@@ -54,7 +54,7 @@ function SearchField(props: AriaSearchFieldProps) {
   return (
     <input
       ref={inputRef}
-      className="w-full h-12 appearance-none border border-b-2 border-current p-2 rounded shadow placeholder-current font-medium focus:outline-none focus:text-blue-500"
+      className="w-full h-12 p-2 font-medium placeholder-current border border-b-2 border-current rounded shadow appearance-none focus:outline-none focus:text-blue-500"
       data-cy="SearchField"
       autoCorrect="off"
       spellCheck="false"
@@ -78,10 +78,14 @@ export default function StationsPage() {
   return (
     <main className="p-2">
       <Head>
-        <title>Search Stations</title>
+        <title>Unofficial National Rail Live Departure Boards</title>
+        <meta
+          name="description"
+          content="Live arrivals and departures via UK stations, powered by National Rail Enquiries."
+        />
       </Head>
 
-      <div className="flex flex-col relative max-w-screen-sm m-auto pl-10">
+      <div className="relative flex flex-col max-w-screen-sm pl-10 m-auto">
         <BackButton />
 
         <SearchField
@@ -106,11 +110,11 @@ export default function StationsPage() {
           }}
         />
 
-        <ul className="mt-2 flex flex-col overflow-auto">
+        <ul className="flex flex-col mt-2 overflow-auto">
           {suggestedNames.map((suggestedName) => (
             <li className="p-1" key={suggestedName}>
               <Link href={`/stations/${encodeName(suggestedName)}`}>
-                <a className="block p-1 whitespace-no-wrap font-medium hover:underline hover:text-blue-500 focus:underline focus:text-blue-500">
+                <a className="block p-1 font-medium whitespace-no-wrap hover:underline hover:text-blue-500 focus:underline focus:text-blue-500">
                   {suggestedName}
                 </a>
               </Link>
