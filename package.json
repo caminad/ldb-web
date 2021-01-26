@@ -13,7 +13,7 @@
     "@next/bundle-analyzer": "^10.0.5",
     "autoprefixer": "^10.2.1",
     "clsx": "^1.1.1",
-    "csv-parse": "^4.14.2",
+    "csv-parse": "^4.15.0",
     "date-fns": "^2.16.1",
     "dompurify": "^2.2.3",
     "fuzzysort": "^1.1.4",
