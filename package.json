@@ -9,7 +9,7 @@
     "generate:client": "genql --esm --endpoint https://ldb-graphql.vercel.app/api --output generated/client"
   },
   "dependencies": {
-    "@genql/runtime": "^2.3.3",
+    "@genql/runtime": "^2.4.0",
     "@next/bundle-analyzer": "^10.0.6",
     "autoprefixer": "^10.2.4",
     "clsx": "^1.1.1",
