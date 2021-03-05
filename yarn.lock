@@ -201,10 +201,10 @@
     rimraf "^2.6.3"
     yargs "^15.3.1"
 
-"@genql/runtime@^2.3.3":
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/@genql/runtime/-/runtime-2.3.3.tgz#038104fb06ff4f41863e99bfcfff48d91fcaf571"
-  integrity sha512-5dziwBxqBen++/amxV5yy498wu7F3F0CmbtawcIm6bDfzn0mOS5UwNMZcdTBscWzZmP8GIAzmaqWtsdPjxaBZA==
+"@genql/runtime@^2.3.3", "@genql/runtime@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@genql/runtime/-/runtime-2.5.0.tgz#5176f204d04a78e8d1556407b54d19cfb5d1c7ca"
+  integrity sha512-KwkEbCSNyf2rmw8Yh1g4guOKpy6ckU9rp12FGD8arAmuM5D+YDeapis7BaNRdPaTsg7xUq5Tn79qOokp2Hn9CA==
   dependencies:
     "@types/qs" "^6.9.0"
     "@types/ws" "^6.0.1"
