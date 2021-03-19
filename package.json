@@ -11,7 +11,7 @@
   "dependencies": {
     "@genql/runtime": "^2.3.3",
     "@next/bundle-analyzer": "^10.0.7",
-    "autoprefixer": "^10.2.4",
+    "autoprefixer": "^10.2.5",
     "clsx": "^1.1.1",
     "csv-parse": "^4.15.1",
     "date-fns": "^2.17.0",
