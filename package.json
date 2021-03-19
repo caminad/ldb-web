@@ -21,7 +21,7 @@
     "next": "^10.0.7",
     "postcss": "^8.2.8",
     "react": "17.0.1",
-    "react-aria": "^3.3.0",
+    "react-aria": "^3.4.0",
     "react-dom": "17.0.1",
     "react-stately": "^3.2.0",
     "swr": "^0.5.3",
