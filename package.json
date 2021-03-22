@@ -15,7 +15,7 @@
     "clsx": "^1.1.1",
     "csv-parse": "^4.15.1",
     "date-fns": "^2.19.0",
-    "dompurify": "^2.2.6",
+    "dompurify": "^2.2.7",
     "fuzzysort": "^1.1.4",
     "graphql": "^15.5.0",
     "next": "^10.0.7",
