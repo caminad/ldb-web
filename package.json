@@ -23,7 +23,7 @@
     "react": "17.0.1",
     "react-aria": "^3.4.0",
     "react-dom": "17.0.1",
-    "react-stately": "^3.2.0",
+    "react-stately": "^3.3.0",
     "swr": "^0.5.3",
     "tailwindcss": "^2.0.3"
   },
