@@ -18,7 +18,7 @@
     "dompurify": "^2.2.8",
     "fuzzysort": "^1.1.4",
     "graphql": "^15.5.0",
-    "next": "^10.2.0",
+    "next": "^10.2.3",
     "postcss": "^8.2.14",
     "react": "17.0.2",
     "react-aria": "^3.6.0",
