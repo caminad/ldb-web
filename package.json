@@ -14,7 +14,7 @@
     "autoprefixer": "^10.2.5",
     "clsx": "^1.1.1",
     "csv-parse": "^4.15.4",
-    "date-fns": "^2.21.3",
+    "date-fns": "^2.22.1",
     "dompurify": "^2.2.8",
     "fuzzysort": "^1.1.4",
     "graphql": "^15.5.0",
