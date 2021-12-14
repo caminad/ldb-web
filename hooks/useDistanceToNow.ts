@@ -7,7 +7,7 @@ import {
 import enGB from 'date-fns/locale/en-GB';
 import useSWR from 'swr';
 
-export default function useDistanceToNow(isoDateString?: string) {
+export default function useDistanceToNow(isoDateString: string) {
   const { data } = useSWR([isoDateString, formatDistanceToNowStrict], {
     fetcher(key) {
       const now = new Date();

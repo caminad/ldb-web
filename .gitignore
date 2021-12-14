@@ -39,3 +39,6 @@ cypress/videos
 
 # lighthouse collect data
 .lighthouseci
+
+# typescript
+tsconfig.tsbuildinfo
