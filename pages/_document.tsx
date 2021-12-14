@@ -11,6 +11,7 @@ export default class Document extends NextDocument {
             href="https://rsms.me"
             crossOrigin="anonymous"
           />
+          {/* eslint-disable @next/next/no-sync-scripts -- FIXME: use @twind/next */}
           <script
             type="module"
             src="https://cdn.skypack.dev/pin/twind@v0.9.1-viFlSZPxrIbjfGcPsoOc/min/twind/shim.js"
